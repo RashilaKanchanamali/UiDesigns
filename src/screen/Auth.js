@@ -8,9 +8,11 @@ import DashBoard from './DashBoard';
 
 class AuthScreen extends Component {
 
-    // static Navigation ={
-    //     tabBarVisible: false
-    // }
+    static navigationOptions={ 
+        header:null,
+        tabBarVisible:false 
+    }
+    
 
     render () {
         const { navigate } = this.props.navigation;

@@ -1,35 +1,62 @@
 import React, { Component } from 'react';
-import { StyleSheet, TouchableOpacity, View, Text } from "react-native";
+import { View, Image, StyleSheet, Text } from 'react-native';
+import { TouchableOpacity } from 'react-native-gesture-handler';
+import TimeSheet from './TimeSheet';
 
 class DashBoard extends Component {
-    render() {
-        return (
-            <View style={styles.container}>
-            <View style= {styles.Text1}>
-                <TouchableOpacity>
-                    <Text>
-                        Person
-                    </Text>
-                </TouchableOpacity>
-            </View>
-            </View>
-        );
-    }
+
+  static navigationOptions={ 
+    //header:null,
+    tabBarVisible:true 
 }
 
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        //justifyContent: "center",
-        //alignItems: "center",
-        backgroundColor: "#F5FCFF"
-    },
-    Text1: {
-        alignItems: 'baseline',
-        width: 80,
-        height: 80,
-        backgroundColor: "#00ced1"
-    }
-});
+  render() {
+    const { navigate } = this.props.navigation;
+    return ( 
+      
+      <View>
+        <View>
+          <Text>Name</Text>
+        </View>
+        
+        <View style={styles.imageDirection1}>
+          <TouchableOpacity 
+            style={styles.imageContainer}
+            onPress= { () => navigate('TimeSheet') }>
 
+            <Image 
+              style={styles.ImageStyle}
+              source={require('../UI/components/Image/timeSheet.png')}
+
+              />
+          </TouchableOpacity>
+        </View>
+      </View>
+
+    
+    
+      
+      
+    );
+  }
+}
 export default DashBoard;
+
+const styles = StyleSheet.create({
+  ImageStyle: {
+    
+    height: 60,
+    width: 60
+  },
+  imageContainer: {
+    
+    paddingTop: 20
+  },
+  imageDirection1: {
+    paddingLeft: 60,
+    flexDirection: 'row'
+  },
+  imageDirection2: {
+    flexDirection: "column"
+  }
+})
