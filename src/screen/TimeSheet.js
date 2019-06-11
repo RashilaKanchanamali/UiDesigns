@@ -1,8 +1,10 @@
 import React, { Component } from 'react';
 
 import { StyleSheet, View, Alert, Text, ScrollView } from 'react-native';
-import { TouchableOpacity } from 'react-native-gesture-handler';
+import { TouchableOpacity, TextInput } from 'react-native-gesture-handler';
 import Button from '../UI/components/Button/Button';
+import {AsyncStorage} from 'react-native';
+
 
 export default class App extends Component {
   constructor(props) {
@@ -177,6 +179,12 @@ export default class App extends Component {
         </View>
         </ScrollView>
         </View>
+        </View>
+
+        <View>
+          <TextInput
+            placeholder= {"save"}
+          />
         </View>
 
         <Button> Day End </Button>

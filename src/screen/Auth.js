@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
-import { View, Text, Platform, StyleSheet, TextInput, TouchableOpacity } from 'react-native';
+import { View, Text, Platform, StyleSheet, TextInput, TouchableOpacity, Alert } from 'react-native';
 import HeadingText from '../UI/components/HeadingText/HeadingText';
 import Button from '../UI/components/Button/Button';
 import DashBoard from './DashBoard';
+import { isTemplateElement } from '@babel/types';
 
 
 
@@ -12,6 +13,63 @@ class AuthScreen extends Component {
         header:null,
         tabBarVisible:false 
     }
+
+    state = {
+        token: '',
+        UserName: '',
+        Password: ''
+    }
+
+    componentWillMount() {
+        this.fetchData();
+      }
+
+    fetchData = async () => {
+
+    
+        fetch('http://192.168.2.23:100/integration/login/getToken', {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                UserName: this.state.UserName,
+                Password: this.state.Password
+            })
+        })
+        .then(response => response.json())
+        .then(( responseJson ) => {
+            this.setState ({
+                token: responseJson
+            })
+             //Alert.alert(JSON.stringify(responseJson));
+
+            navigate ('DashBoard', {token: this.state.token})
+
+            if (this.state.token.status === "Success" ) {
+                navigate('TimeSheet', {token: item.token});
+            }
+            else {
+                // Alert.alert(responseJson)
+            }
+        }).catch((error) => {
+            // Alert.alert(JSON.stringify(responseJson));
+
+        });
+
+    
+
+}
+
+    renderButton() {
+        return (
+            <Button onPress={this.fetchData.bind(this)}>
+            LOGIN
+          </Button>
+        );
+  
+      }
     
 
     render () {
@@ -30,19 +88,25 @@ class AuthScreen extends Component {
                             <View style={styles.inputContainer}>
                                 <TextInput
                                 placeholder="Username"
+                                onChangeText={UserName => this.setState({ UserName})}
+                                //blurOnSubmit={true}
                                 style={styles.input}
                                 />
                             </View>
                             <View>
                                 <TextInput
                                 placeholder="Password"
+                                onChangeText={Password => this.setState({ Password})}
+                                //blurOnSubmit={true}
                                 style={styles.input}
                                 />
                             </View>
                             <View style={styles.buttonContainer}>
-                                <TouchableOpacity >
-                                    <Button onPress={ () => navigate('DashBoard')}>LOGIN</Button>
-                                </TouchableOpacity>
+                                
+                            <View>
+                                {this.renderButton()}
+                            </View>
+                               
                             </View>
                             <View style={styles.wordContainer}>
                             <Text>Developed By Techsys</Text>
