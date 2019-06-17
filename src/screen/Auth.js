@@ -3,9 +3,10 @@ import { View, Text, Platform, StyleSheet, TextInput, TouchableOpacity, Alert } 
 import HeadingText from '../UI/components/HeadingText/HeadingText';
 import Button from '../UI/components/Button/Button';
 import DashBoard from './DashBoard';
-import { isTemplateElement } from '@babel/types';
+import {AsyncStorage} from 'react-native';
 
 
+//const ACCESS_TOKEN = 'access_token';
 
 class AuthScreen extends Component {
 
@@ -17,16 +18,39 @@ class AuthScreen extends Component {
     state = {
         token: '',
         UserName: '',
-        Password: ''
+        Password: '',
+        user: ''
     }
 
     componentWillMount() {
-        this.fetchData();
+        this.fetchData1();
+        this.fetchData2();
       }
 
-    fetchData = async () => {
+    //   _storeData = async () => {
+    //     try {
+    //       await AsyncStorage.setItem('token', 'responseJson');
+    //     } catch (error) {
+    //       // Error saving data
+    //     }
+    //   };
 
-    
+    //   _retrieveData = async () => {
+    //     try {
+    //       const token = await AsyncStorage.getItem('responseJson');
+    //       if (token !== null) {
+    //         // We have data!!
+    //         navigate('TimeSheet', {token: item.token});
+    //       }
+    //     } catch (error) {
+    //       // Error retrieving data
+    //     }
+    //   };
+
+     
+    fetchData1 = async () => {
+        
+           
         fetch('http://192.168.2.23:100/integration/login/getToken', {
             method: 'POST',
             headers: {
@@ -38,33 +62,59 @@ class AuthScreen extends Component {
                 Password: this.state.Password
             })
         })
+        
         .then(response => response.json())
         .then(( responseJson ) => {
+            
             this.setState ({
                 token: responseJson
             })
-             //Alert.alert(JSON.stringify(responseJson));
+             
 
-            navigate ('DashBoard', {token: this.state.token})
-
+            
             if (this.state.token.status === "Success" ) {
+                console.log("abcd");
                 navigate('TimeSheet', {token: item.token});
             }
             else {
                 // Alert.alert(responseJson)
             }
-        }).catch((error) => {
-            // Alert.alert(JSON.stringify(responseJson));
 
-        });
+             Alert.alert(JSON.stringify(this.state.UserName));
 
+        })
     
+        // catch((error) => {
+        //     //Alert.alert(JSON.stringify(responseJson));
 
+        // };
+}
+
+fetchData2 = async () => {
+    fetch ('http://192.168.2.23:100/integration/login/getLoginUser', {
+        method: 'POST',
+        headers: {
+            'Authorization': 'Bearer + this.state.token',
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+           token: this.state.token
+        })
+    })
+    .then((response) => response.json())
+      .then((responseJson) => {
+        this.setState({
+          user:responseJson
+        })
+        Alert.alert(JSON.stringify(this.state.user.lastName));
+      })
+      
 }
 
     renderButton() {
         return (
-            <Button onPress={this.fetchData.bind(this)}>
+            <Button onPress={this.fetchData2.bind(this)}>
             LOGIN
           </Button>
         );
@@ -100,15 +150,22 @@ class AuthScreen extends Component {
                                 //blurOnSubmit={true}
                                 style={styles.input}
                                 />
+                                
                             </View>
+
+
                             <View style={styles.buttonContainer}>
                                 
                             <View>
                                 {this.renderButton()}
                             </View>
+                            
                                
                             </View>
                             <View style={styles.wordContainer}>
+                            {/* <Text
+                                placeholder={this.state.user.lastName}
+                            /> */}
                             <Text>Developed By Techsys</Text>
                             </View>
                     </View>
