@@ -14,18 +14,16 @@ class AuthScreen extends Component {
     }
 
     state = {
-        token: '',
+        token: [],
         UserName: '',
-        Password: '',
-        user: ''
+        Password: ''
     }
 
     componentWillMount() {
-        this.fetchData1();
-        this.fetchData2();
+        this.fetchData();
       }
      
-    fetchData1 = async () => {
+    fetchData = async () => {
         
         const { navigate } = this.props.navigation;
         fetch('http://192.168.2.23:100/integration/login/getToken', {
@@ -46,55 +44,19 @@ class AuthScreen extends Component {
             this.setState ({
                 token: responseJson
             })
-        //.then(navigate('DashBoard', {token: item.token}))
 
-            
             if (this.state.token.status === "Success" ) {
                 console.log("abcd");
                 navigate('DashBoard', {token: this.state.token});
             }
-            else {
-                // Alert.alert(responseJson)
-            }
 
-             //Alert.alert(JSON.stringify(this.state.UserName));
-
-        })
-    
-        // catch((error) => {
-        //     //Alert.alert(JSON.stringify(responseJson));
-
-        // };
-}
-
-fetchData2 = async () => {
-
-    //var bearer = 'Bearer ' + token;
-
-    fetch ('http://192.168.2.23:100/integration/login/getLoginUser', {
-        method: 'GET',
-        headers: {
-            'Authorization': 'Bearer ' + this.state.token,
-            'Accept': 'application/json',
-            'Content-Type': 'application/json'
-        },
-        // body: JSON.stringify({
-        //    token: this.state.token
-        // })
-    })
-    .then((response) => response.json())
-      .then((responseJson) => {
-        this.setState({
-          user:responseJson
-        })
-        Alert.alert(JSON.stringify(responseJson));
-      })
-      
+            //Alert.alert(JSON.stringify(responseJson));
+        }) 
 }
 
     renderButton() {
         return (
-            <Button onPress={this.fetchData1.bind(this)}>
+            <Button onPress={this.fetchData.bind(this)}>
             LOGIN
           </Button>
         );
@@ -104,7 +66,6 @@ fetchData2 = async () => {
 
     render () {
         
-        //let headingText = null;
 
         headingText1= (
             <HeadingText style={styles.textHeading}>One JIT</HeadingText>
@@ -143,9 +104,7 @@ fetchData2 = async () => {
                                
                             </View>
                             <View style={styles.wordContainer}>
-                            {/* <Text
-                                placeholder={this.state.user.lastName}
-                            /> */}
+                
                             <Text>Developed By Techsys</Text>
                             </View>
                     </View>

@@ -15,8 +15,32 @@ constructor(props){
   super(props);
   this.state = {
     token: this.props.navigation.state.params.token,
-    
+    user: []
   }
+}
+
+componentWillMount() {
+  this.fetchData();
+}
+
+fetchData = async () => {
+
+    fetch ('http://192.168.2.23:100/integration/login/getLoginUser', {
+        method: 'GET',
+        headers: {
+            'Authorization': 'Bearer ' + this.state.token,
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        }
+    })
+    .then((response) => response.json())
+      .then((responseJson) => {
+        this.setState({
+          user:responseJson
+        })
+        Alert.alert(JSON.stringify(responseJson));
+      })
+      
 }
 
   render() {
@@ -24,13 +48,10 @@ constructor(props){
     return ( 
       
       <View>
-        <View>
-          <Text>Name</Text>
-        </View>
 
         <View>
           <Text
-            placeholder={this.state.token}
+            placeholder={this.state.user.firstName}
           />
         </View>
         
