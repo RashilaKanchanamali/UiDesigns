@@ -10,6 +10,15 @@ class DashBoard extends Component {
     tabBarVisible:true 
 }
 
+constructor(props){
+      
+  super(props);
+  this.state = {
+    token: this.props.navigation.state.params.token,
+    
+  }
+}
+
   render() {
     const { navigate } = this.props.navigation;
     return ( 
@@ -17,6 +26,12 @@ class DashBoard extends Component {
       <View>
         <View>
           <Text>Name</Text>
+        </View>
+
+        <View>
+          <Text
+            placeholder={this.state.token}
+          />
         </View>
         
         <View style={styles.imageDirection1}>
