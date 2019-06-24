@@ -6,9 +6,6 @@ import DashBoard from './DashBoard';
 import {AsyncStorage} from 'react-native';
 
 
-
-//const ACCESS_TOKEN = 'access_token';
-
 class AuthScreen extends Component {
 
     static navigationOptions={ 
@@ -17,58 +14,58 @@ class AuthScreen extends Component {
     }
 
     state = {
-        token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9zaWQiOiIxMTkiLCJuYmYiOjE1NjEzNDg4MTgsImV4cCI6MTU2MTM0ODkzOCwiaWF0IjoxNTYxMzQ4ODE4fQ.vRlEh0kdO8Q_N8iCawiUJqVpEwWfVwCobfasWa9Q-qY",
-        // UserName: '',
-        // Password: '',
+        token: '',
+        UserName: '',
+        Password: '',
         user: ''
     }
 
     componentWillMount() {
-        //this.fetchData1();
+        this.fetchData1();
         this.fetchData2();
       }
      
-//     fetchData1 = async () => {
+    fetchData1 = async () => {
         
-           
-//         fetch('http://192.168.2.23:100/integration/login/getToken', {
-//             method: 'POST',
-//             headers: {
-//                 'Accept': 'application/json',
-//                 'Content-Type': 'application/json'
-//             },
-//             body: JSON.stringify({
-//                 UserName: this.state.UserName,
-//                 Password: this.state.Password
-//             })
-//         })
+        const { navigate } = this.props.navigation;
+        fetch('http://192.168.2.23:100/integration/login/getToken', {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                UserName: this.state.UserName,
+                Password: this.state.Password
+            })
+        })
         
-//         .then(response => response.json())
-//         .then(( responseJson ) => {
+        .then(response => response.json())
+        .then(( responseJson ) => {
             
-//             this.setState ({
-//                 token: responseJson
-//             })
-//         //.then(navigate('DashBoard', {token: item.token}))
+            this.setState ({
+                token: responseJson
+            })
+        //.then(navigate('DashBoard', {token: item.token}))
 
             
-//             if (this.state.token.status === "Success" ) {
-//                 console.log("abcd");
-//                 navigate('DashBoard', {token: item.token});
-//             }
-//             else {
-//                 // Alert.alert(responseJson)
-//             }
+            if (this.state.token.status === "Success" ) {
+                console.log("abcd");
+                navigate('DashBoard', {token: this.state.token});
+            }
+            else {
+                // Alert.alert(responseJson)
+            }
 
-//              Alert.alert(JSON.stringify(this.state.UserName));
+             //Alert.alert(JSON.stringify(this.state.UserName));
 
-//         })
+        })
     
-//         // catch((error) => {
-//         //     //Alert.alert(JSON.stringify(responseJson));
+        // catch((error) => {
+        //     //Alert.alert(JSON.stringify(responseJson));
 
-//         // };
-// }
+        // };
+}
 
 fetchData2 = async () => {
 
@@ -77,7 +74,7 @@ fetchData2 = async () => {
     fetch ('http://192.168.2.23:100/integration/login/getLoginUser', {
         method: 'GET',
         headers: {
-            'Authorization': 'Bearer'+ this.state.token,
+            'Authorization': 'Bearer ' + this.state.token,
             'Accept': 'application/json',
             'Content-Type': 'application/json'
         },
@@ -97,7 +94,7 @@ fetchData2 = async () => {
 
     renderButton() {
         return (
-            <Button onPress={this.fetchData2.bind(this)}>
+            <Button onPress={this.fetchData1.bind(this)}>
             LOGIN
           </Button>
         );
@@ -106,7 +103,7 @@ fetchData2 = async () => {
     
 
     render () {
-        const { navigate } = this.props.navigation;
+        
         //let headingText = null;
 
         headingText1= (
@@ -118,15 +115,15 @@ fetchData2 = async () => {
                 {headingText1}
                     <View style={styles.container2}>
                         <Text style={styles.textSignIn}>Sign In</Text>
-                            {/* <View style={styles.inputContainer}>
+                            <View style={styles.inputContainer}>
                                 <TextInput
                                 placeholder="Username"
                                 onChangeText={UserName => this.setState({ UserName})}
                                 //blurOnSubmit={true}
                                 style={styles.input}
                                 />
-                            </View> */}
-                            {/* <View>
+                            </View>
+                            <View>
                                 <TextInput
                                 placeholder="Password"
                                 onChangeText={Password => this.setState({ Password})}
@@ -134,7 +131,7 @@ fetchData2 = async () => {
                                 style={styles.input}
                                 />
                                 
-                            </View> */}
+                            </View>
 
 
                             <View style={styles.buttonContainer}>
