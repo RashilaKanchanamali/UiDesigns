@@ -14,7 +14,7 @@ constructor(props){
       
   super(props);
   this.state = {
-    token: this.props.navigation.state.params.token,
+    Token: this.props.navigation.state.params.token,
     user: []
   }
 }
@@ -28,7 +28,7 @@ fetchData = async () => {
     fetch ('http://192.168.2.23:100/integration/login/getLoginUser', {
         method: 'GET',
         headers: {
-            'Authorization': 'Bearer ' + this.state.token,
+            'Authorization': 'Bearer ' + this.state.Token,
             'Accept': 'application/json',
             'Content-Type': 'application/json'
         }
@@ -49,11 +49,11 @@ fetchData = async () => {
       
       <View>
 
-        <View>
-          <Text
-            placeholder={this.state.user.firstName}
-          />
-        </View>
+        {/* <View>
+          <Text>
+            {this.props.navigation.state.params.user.firstName}
+            </Text>
+        </View> */}
         
         <View style={styles.imageDirection1}>
           <TouchableOpacity 

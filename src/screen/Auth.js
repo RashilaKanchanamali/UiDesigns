@@ -3,7 +3,6 @@ import { View, Text, Platform, StyleSheet, TextInput, TouchableOpacity, Alert } 
 import HeadingText from '../UI/components/HeadingText/HeadingText';
 import Button from '../UI/components/Button/Button';
 import DashBoard from './DashBoard';
-import {AsyncStorage} from 'react-native';
 
 
 class AuthScreen extends Component {
@@ -13,10 +12,13 @@ class AuthScreen extends Component {
         tabBarVisible:false 
     }
 
-    state = {
-        token: [],
-        UserName: '',
-        Password: ''
+    constructor(props) {
+        super(props);
+        this.state = {
+            token: '',
+            UserName: '',
+            Password: ''
+        }    
     }
 
     componentWillMount() {
@@ -25,7 +27,7 @@ class AuthScreen extends Component {
      
     fetchData = async () => {
         
-        const { navigate } = this.props.navigation;
+    const { navigate } = this.props.navigation;
         fetch('http://192.168.2.23:100/integration/login/getToken', {
             method: 'POST',
             headers: {
@@ -47,7 +49,7 @@ class AuthScreen extends Component {
 
             if (this.state.token.status === "Success" ) {
                 console.log("abcd");
-                navigate('DashBoard', {token: this.state.token});
+                navigate('DashBoard', {Token: this.state.token});
             }
 
             //Alert.alert(JSON.stringify(responseJson));
