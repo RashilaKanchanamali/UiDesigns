@@ -23,6 +23,7 @@ class AuthScreen extends Component {
 
     componentWillMount() {
         this.fetchData();
+        this.fetchData1();
       }
      
     fetchData = async () => {
@@ -49,11 +50,32 @@ class AuthScreen extends Component {
 
             if (this.state.token.status === "Success" ) {
                 console.log("abcd");
-                navigate('DashBoard', {Token: this.state.token});
+                // this.props.navigation.navigate('DashBoard', {Token: this.state.token});
+                navigate('DashBoard', {token: this.state.token});
             }
 
-            //Alert.alert(JSON.stringify(responseJson));
+            Alert.alert(JSON.stringify(responseJson));
         }) 
+}
+
+fetchData1 = async () => {
+
+    fetch ('http://192.168.2.23:100/integration/login/getLoginUser', {
+        method: 'GET',
+        headers: {
+            'Authorization': 'Bearer ' + this.state.token,
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        }
+    })
+    .then((response) => response.json())
+      .then((responseJson) => {
+        this.setState({
+          user:responseJson
+        })
+        Alert.alert(JSON.stringify(responseJson));
+      })
+      
 }
 
     renderButton() {

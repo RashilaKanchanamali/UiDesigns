@@ -49,11 +49,12 @@ fetchData = async () => {
       
       <View>
 
-        {/* <View>
+        <View>
           <Text>
-            {this.props.navigation.state.params.user.firstName}
+          {/* Lakshitha Wikramarachchi */}
+            {/* {this.props.navigation.state.params.user.firstName} */}
             </Text>
-        </View> */}
+        </View>
         
         <View style={styles.imageDirection1}>
           <TouchableOpacity 
