@@ -6,8 +6,9 @@ import TimeSheet from './TimeSheet';
 class DashBoard extends Component {
 
   static navigationOptions={ 
-    //header:null,
-    tabBarVisible:true 
+    // header:null,
+    tabBarVisible:true ,
+    title: 'DashBoard'
 }
 
 constructor(props){
@@ -54,22 +55,16 @@ fetchData = async () => {
       <View style={styles.container}>
 
         <View>
-          <Text>
-            {this.state.user.userName}
+          <Text style = {styles.textStyle}>
+            {this.state.user.firstName}  {this.state.user.lastName}
             </Text>
-
-          
-          
-          <Text>
-
-          </Text>
         </View>
         
         <View style={styles.imageDirection1}>
           <TouchableOpacity 
         
             style={styles.imageContainer}
-            onPress= { () => navigate('TimeSheet', {TokenTimeSheet }) }>
+            onPress= { () => navigate('TimeSheet', {TokenTimeSheet}) }>
 
             <Image 
               style={styles.ImageStyle}
@@ -110,5 +105,10 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#ddd'
+  },
+  textStyle: {
+    padding: 30,
+    fontSize: 18,
+    color: '#00008b'
   }
 })

@@ -7,6 +7,12 @@ import {AsyncStorage} from 'react-native';
 
 
 export default class App extends Component {
+
+  static navigationOptions={ 
+    // header:null,
+    tabBarVisible:true ,
+    title: 'Time Entry sheet'
+}
   constructor(props) {
     super(props);
     this.params=this.props.navigation.state.params,
@@ -16,7 +22,8 @@ export default class App extends Component {
       date2: '',
       date3: '',
       date4: '',
-      date5: ''
+      date5: '',
+      userDetails:[]
     };
   }
   componentDidMount() {
@@ -32,7 +39,7 @@ export default class App extends Component {
       var dayAfterTomorrow = new Date().addDays(2);
       var yesterday = new Date().addDays(-1);
       var dayBeforeYesterday = new Date().addDays(-2);
-      var Token =  this.params.TokenTimeSheet
+      var TokenTimeSheetInternal =  this.params.TokenTimeSheet
     
     that.setState({
       //Setting the value of the date time
@@ -44,9 +51,33 @@ export default class App extends Component {
     });
   }
 
+  componentWillMount() {
+    this.fetchData();
+  }
+
+  fetchData = async () => {
+
+    fetch ('http://192.168.2.23:100/integration/activity/getActivityById', {
+        method: 'GET',
+        headers: {
+            'Authorization': 'Bearer ' + this.params.TokenTimeSheet,
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        }
+    })
+    .then((response) => response.json())
+      .then((responseJson) => {
+        this.setState({
+          userDetails:responseJson
+        })
+        // var task = this.state.userDetails.description
+         Alert.alert(JSON.stringify(responseJson));
+      })
+      
+}
   render() {
     // how to view token import from previous page
-    Alert.alert(this.params.TokenTimeSheet);
+    // Alert.alert(this.params.TokenTimeSheet);
 
     return (
       <View >
@@ -98,14 +129,14 @@ export default class App extends Component {
             {'\n'}Tasks{'\n'}
           </Text>
 
+          <Text>
+            {this.state.task}
+          </Text>
+
           <View style= {styles.textViewStyle}>
             <ScrollView>
               <Text style= {styles.textStyle1}>
-              hhhhhhhhhhhhhhhhhhhhhjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj
-              kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkhhhhhhhhhhhhhhhhhhhhhh
-              ddddddddddddddddddddddddddddddddggggggggggggggggggggggggg
-              dddddddddddddddddddddddddtttttttttttttttttttttttttttttttttt
-              ddddddddddddddddddddddddddrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr
+              {this.state.userDetails}
               </Text>
               </ScrollView>
           </View>
