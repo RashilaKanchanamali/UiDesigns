@@ -16,14 +16,16 @@ export default class App extends Component {
   constructor(props) {
     super(props);
     this.params=this.props.navigation.state.params,
+
     this.state = {
       //default value of the date time
+      details:[],
       date1: '',
       date2: '',
       date3: '',
       date4: '',
-      date5: '',
-      userDetails:[]
+      date5: ''
+     
     };
   }
   componentDidMount() {
@@ -68,10 +70,10 @@ export default class App extends Component {
     .then((response) => response.json())
       .then((responseJson) => {
         this.setState({
-          userDetails:responseJson
+          details:responseJson
         })
         // var task = this.state.userDetails.description
-         Alert.alert(JSON.stringify(responseJson));
+          Alert.alert(JSON.stringify(responseJson));
       })
       
 }
@@ -130,14 +132,14 @@ export default class App extends Component {
           </Text>
 
           <Text>
-            {this.state.task}
+          {this.state.details.description}
           </Text>
 
           <View style= {styles.textViewStyle}>
             <ScrollView>
-              <Text style= {styles.textStyle1}>
-              {this.state.userDetails}
-              </Text>
+              {/* <Text style= {styles.textStyle1}>
+              {this.state.details.description}
+              </Text> */}
               </ScrollView>
           </View>
         </View>

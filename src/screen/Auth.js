@@ -55,7 +55,7 @@ class AuthScreen extends Component {
                 this.props.navigation.navigate('DashBoard', { TokenDashBoard:Token});
             }
 
-            // Alert.alert(JSON.stringify(responseJson.id));
+            //   Alert.alert((Token));
         }) 
 }
 
