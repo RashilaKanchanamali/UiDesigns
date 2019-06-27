@@ -9,6 +9,7 @@ import {AsyncStorage} from 'react-native';
 export default class App extends Component {
   constructor(props) {
     super(props);
+    this.params=this.props.navigation.state.params,
     this.state = {
       //default value of the date time
       date1: '',
@@ -31,7 +32,7 @@ export default class App extends Component {
       var dayAfterTomorrow = new Date().addDays(2);
       var yesterday = new Date().addDays(-1);
       var dayBeforeYesterday = new Date().addDays(-2);
-
+      var Token =  this.params.TokenTimeSheet
     
     that.setState({
       //Setting the value of the date time
@@ -44,6 +45,9 @@ export default class App extends Component {
   }
 
   render() {
+    // how to view token import from previous page
+    Alert.alert(this.params.TokenTimeSheet);
+
     return (
       <View >
       <ScrollView>

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Image, StyleSheet, Text } from 'react-native';
+import { View, Image, StyleSheet, Text, Alert } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import TimeSheet from './TimeSheet';
 
@@ -13,8 +13,11 @@ class DashBoard extends Component {
 constructor(props){
       
   super(props);
+  this.navigate=this.props.navigation.navigate;
+  this.params=this.props.navigation.state.params,
+
   this.state = {
-    Token: this.props.navigation.state.params.token,
+    // Token: this.props.navigation.state.params.token,
     user: []
   }
 }
@@ -28,7 +31,7 @@ fetchData = async () => {
     fetch ('http://192.168.2.23:100/integration/login/getLoginUser', {
         method: 'GET',
         headers: {
-            'Authorization': 'Bearer ' + this.state.Token,
+            'Authorization': 'Bearer ' + this.params.TokenDashBoard,
             'Accept': 'application/json',
             'Content-Type': 'application/json'
         }
@@ -38,34 +41,41 @@ fetchData = async () => {
         this.setState({
           user:responseJson
         })
-        Alert.alert(JSON.stringify(responseJson));
+        // Alert.alert(JSON.stringify(responseJson.userName));
       })
       
 }
 
   render() {
     const { navigate } = this.props.navigation;
+    var TokenTimeSheet= this.params.TokenDashBoard;
     return ( 
       
-      <View>
+      <View style={styles.container}>
 
         <View>
           <Text>
-          {/* Lakshitha Wikramarachchi */}
-            {/* {this.props.navigation.state.params.user.firstName} */}
+            {this.state.user.userName}
             </Text>
+
+          
+          
+          <Text>
+
+          </Text>
         </View>
         
         <View style={styles.imageDirection1}>
           <TouchableOpacity 
+        
             style={styles.imageContainer}
-            onPress= { () => navigate('TimeSheet') }>
+            onPress= { () => navigate('TimeSheet', {TokenTimeSheet }) }>
 
             <Image 
               style={styles.ImageStyle}
               source={require('../UI/components/Image/timeSheet.png')}
-
               />
+            <Text>Time entry</Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -91,9 +101,14 @@ const styles = StyleSheet.create({
   },
   imageDirection1: {
     paddingLeft: 60,
-    flexDirection: 'row'
+    flexDirection: 'row',
+    // backgroundColor: '#dddd'
   },
   imageDirection2: {
     flexDirection: "column"
+  },
+  container: {
+    flex: 1,
+    backgroundColor: '#ddd'
   }
 })
