@@ -40,7 +40,7 @@ fetchData = async () => {
     .then((response) => response.json())
       .then((responseJson) => {
         this.setState({
-          user:responseJson
+          user: responseJson
         })
         // Alert.alert(JSON.stringify(responseJson.userName));
       })
@@ -107,8 +107,9 @@ const styles = StyleSheet.create({
     backgroundColor: '#ddd'
   },
   textStyle: {
-    padding: 30,
-    fontSize: 18,
+    paddingTop: 20,
+    paddingLeft: 200,
+    fontSize: 16,
     color: '#00008b'
   }
 })

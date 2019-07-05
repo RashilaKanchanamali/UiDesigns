@@ -1,12 +1,24 @@
 import React, { Component } from 'react';
-
-import { StyleSheet, View, Alert, Text, ScrollView } from 'react-native';
-import { TouchableOpacity, TextInput } from 'react-native-gesture-handler';
+import { StyleSheet, View, Alert, Text, ScrollView,AppRegistry, TouchableOpacity } from 'react-native';
+import { TextInput } from 'react-native-gesture-handler';
 import Button from '../UI/components/Button/Button';
-import {AsyncStorage} from 'react-native';
+import Icon from 'react-native-vector-icons/Ionicons';
+import Modal from "react-native-simple-modal";
 
 
 export default class App extends Component {
+  state = { open: false };
+
+  modalDidOpen = () => console.log("Modal did open.");
+
+  modalDidClose = () => {
+    this.setState({ open: false });
+  };
+
+  openModal = () => this.setState({ open: true });
+
+  // closeModal = () => this.setState({ open: true });
+
 
   static navigationOptions={ 
     // header:null,
@@ -15,16 +27,21 @@ export default class App extends Component {
 }
   constructor(props) {
     super(props);
-    this.params=this.props.navigation.state.params,
+    this.params = this.props.navigation.state.params,
 
     this.state = {
       //default value of the date time
-      details:[],
+      AllActivities:[],
+      toDayActivity:[],
+      delayedActivities:[],
       date1: '',
       date2: '',
       date3: '',
       date4: '',
-      date5: ''
+      date5: '',
+      i:'',
+
+      postList:[]
      
     };
   }
@@ -36,7 +53,7 @@ export default class App extends Component {
       return this;
       };
 
-      var today = new Date();
+      var toDayActivities = new Date();
       var tomorrow = new Date().addDays(1);
       var dayAfterTomorrow = new Date().addDays(2);
       var yesterday = new Date().addDays(-1);
@@ -47,7 +64,7 @@ export default class App extends Component {
       //Setting the value of the date time
       date1: dayBeforeYesterday.getDate(),
       date2: yesterday.getDate(),
-      date3: today.getDate(),
+      date3: toDayActivities.getDate(),
       date4: tomorrow.getDate(),
       date5: dayAfterTomorrow.getDate() 
     });
@@ -59,7 +76,7 @@ export default class App extends Component {
 
   fetchData = async () => {
 
-    fetch ('http://192.168.2.23:100/integration/activity/getActivityById', {
+    fetch ('http://192.168.2.23:100/integration/activity/getActivities', {
         method: 'GET',
         headers: {
             'Authorization': 'Bearer ' + this.params.TokenTimeSheet,
@@ -69,29 +86,52 @@ export default class App extends Component {
     })
     .then((response) => response.json())
       .then((responseJson) => {
-        this.setState({
-          details:responseJson
+          
+          let ToDayTask = [];
+          let DelayedTask = [];
+          let ToTestarray = [];
+          // let ToTestarray=["09/02/2012","06/04/2010","02/01/2018"]
+
+          for (i = 0 ; i < responseJson.activityList.length ; i = i + 1)
+          {
+            ToTestarray.push(responseJson.activityList[i]);
+
+            if(responseJson.activityList[i].isDelayed == true)
+            {
+              DelayedTask.push(responseJson.activityList[i].description);
+            }
+            else
+            {
+              ToDayTask.push(responseJson.activityList[i].description);
+            }
+
+          }
+
+          this.setState({toDayActivity : ToDayTask})
+          this.setState({delayedActivities : DelayedTask})
+          this.setState({AllActivities : ToTestarray})
+
         })
-        // var task = this.state.userDetails.description
-          Alert.alert(JSON.stringify(responseJson));
-      })
-      
 }
   render() {
     // how to view token import from previous page
-    // Alert.alert(this.params.TokenTimeSheet);
+
+    const { navigate } = this.props.navigation;
 
     return (
       <View >
-      <ScrollView>
-        <View style={styles.style1}>
-          <View style= {styles.dateFrame}>
-            <TouchableOpacity style= {styles.dateFrame1}>
-              <Text style={styles.style2}>
-                {this.state.date1}
-              </Text>
-            </TouchableOpacity>
-          </View>
+        <ScrollView>
+          
+            <Icon style={styles.iconStyle} name="ios-notifications" size = {30}/>
+          
+          <View style={styles.style1}>
+            <View style= {styles.dateFrame}>
+              <TouchableOpacity style= {styles.dateFrame1}>
+                <Text style={styles.style2}>
+                  {this.state.date1}
+                </Text>
+              </TouchableOpacity>
+            </View>
           
           <View style= {styles.dateFrame}>
             <TouchableOpacity>
@@ -132,20 +172,75 @@ export default class App extends Component {
           </Text>
 
           <Text>
-          {this.state.details.description}
+          {/* {this.state.toDayActivities.description} */}
+          {/* {this.state.toDayActivities[0]} */}
           </Text>
 
-          <View style= {styles.textViewStyle}>
-            <ScrollView>
-              {/* <Text style= {styles.textStyle1}>
-              {this.state.details.description}
-              </Text> */}
-              </ScrollView>
+          <View style= {styles.container}>
+            
+            {/* {
+                this.state.AllActivities.map(( item, key ) =>
+                (
+                  <View key = { key } style = { styles.item }>
+                    <Text style = { styles.text2 }>{ item }</Text>
+                    <View style = { styles.separator }/>
+                  </View>
+                ))
+              } */}
+              {
+                this.state.delayedActivities.map(( item, key ) =>
+                (
+                  <View key = { key } style = { styles.item }>
+                    <TouchableOpacity onPress={this.openModal}>
+                      <Text style = { styles.text2 }>{ item }</Text>
+                    </TouchableOpacity>
+                    <View style = { styles.separator }/> 
+                  </View>
+                ))
+              }
+
+              {
+                this.state.toDayActivity.map(( item, key ) =>
+                (
+                  <View key = { key } style = { styles.item }>
+                    <TouchableOpacity onPress={this.openModal}>
+                      <Text style = { styles.text }>{ item }</Text>
+                    </TouchableOpacity>
+                    <View style = { styles.separator }/>
+                  </View>
+                ))
+              } 
           </View>
+          
+            <Modal
+              offset={this.state.offset}
+              open={this.state.open}
+              modalDidOpen={this.modalDidOpen}
+              modalDidClose={this.modalDidClose}>
+
+            {/* <View style={{ alignItems: "center" }}>
+              <TouchableOpacity style={{ margin: 5 }} onPress={this.closeModal}>
+                <Text>Close modal</Text>
+              </TouchableOpacity>
+            </View> */}
+
+            <View style = {styles.popupStyle}>
+              <Button style = {{ margin: 5}} onPress = { () => navigate('Done') }>
+                <Text> Done </Text>
+              </Button>
+            </View>
+
+            <View style = {styles.popupStyle}>
+              <Button style = {{ margin: 5}} onPress = { () => navigate('Postpone') }>
+                <Text> Postpone </Text>
+              </Button>
+            </View>
+          </Modal>
         </View>
 
-        <View>
         
+
+      <View>
         <View>
           <Text style = {styles.TextStyle}>
               {'\n'}Time Sheet{'\n'}
@@ -224,7 +319,7 @@ export default class App extends Component {
           />
         </View>
 
-        <Button> Day End </Button>
+        <Button onPress = { () => navigate('Postpone')}>  Day End </Button>
         </ScrollView>
       </View>
     );
@@ -232,6 +327,36 @@ export default class App extends Component {
 }
 
 const styles = StyleSheet.create({
+
+  container:
+  {
+    flex: 1,
+    // paddingTop: (Platform.OS === 'ios') ? 20 : 0
+  },
+  
+  separator:
+  {
+    height: 2,
+    backgroundColor: 'rgba(0,0,0,0.5)',
+    width: '100%'
+  },
+ 
+  text:
+  {
+    fontSize: 15,
+    color: 'black',
+    padding: 5,
+    borderWidth: 1,
+    borderColor: 'black',
+    width: '100%'
+  },
+  text2:
+  {
+    fontSize: 15,
+    color: 'black',
+    padding: 5,
+    backgroundColor: 'rgba(255, 0, 0, 0.8)'
+  },
   style1: {
     // paddingLeft: 70,
     flexDirection: 'row',
@@ -241,13 +366,13 @@ const styles = StyleSheet.create({
   style2: {
     fontSize: 20,
     marginTop: 16,
-    width: 50
+    width: 50,
+    paddingLeft: 20
   },
   dateFrame: {
     borderWidth: 1,
     borderColor: "#deb887",
     borderRadius: 10
-    
   },
   dateFrame1: {
     justifyContent: 'center'
@@ -264,8 +389,7 @@ const styles = StyleSheet.create({
     borderColor: 'black',
     height: 60,
     width: 350,
-    
-    
+    fontWeight: 'bold',
   },
   textStyle1: {
     
@@ -279,5 +403,23 @@ const styles = StyleSheet.create({
   TimeSheetStyle: {
     flexDirection: 'row',
     padding: 3
-  }
+  },
+
+  iconStyle: {
+    alignSelf: 'flex-end',
+    paddingRight: 10
+ },
+ popupStyle: {
+  //  borderWidth: 1,
+  //  borderColor: 'black',
+  //  borderRadius: 10,
+  //  width: 200,
+   alignItems: 'center'
+ },
+ popupModelStyle: {
+   borderWidth: 1,
+   borderColor: 'red'
+ }
 });
+
+AppRegistry.registerComponent('App', () => App);

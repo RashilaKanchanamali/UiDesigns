@@ -2,14 +2,16 @@ import React, {Component} from 'react';
 import {createStackNavigator, createAppContainer, createDrawerNavigator} from 'react-navigation';
 import Auth from './src/screen/Auth';
 import DashBoard from './src/screen/DashBoard';
-import Home from './src/screen/Home';
-import Settings from './src/screen/Settings';
+import Done from './src/screen/Done';
+import Postpone from './src/screen/Postpone';
 import TimeSheet from './src/screen/TimeSheet';
 
 const MainNavigator = createStackNavigator({
   Auth: {screen: Auth},
   DashBoard: {screen: DashBoard},
-  TimeSheet: {screen: TimeSheet}
+  TimeSheet: {screen: TimeSheet},
+  Done: {screen: Done},
+  Postpone: {screen: Postpone}
 
 });
 
