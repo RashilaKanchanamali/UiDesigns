@@ -92,7 +92,7 @@ const styles = StyleSheet.create({
     flex: 1,
     // justifyContent: 'center',
     // alignItems: 'center',
-    backgroundColor: '#7FFFD4',
+    backgroundColor: '#87CEEB',
   },
   topic: {
     fontSize: 18,

@@ -59,33 +59,61 @@ fetchData = async () => {
             {this.state.user.firstName}  {this.state.user.lastName}
             </Text>
         </View>
-        
-        <View style={styles.imageDirection1}>
-          <TouchableOpacity 
-        
-            style={styles.imageContainer}
-            onPress= { () => navigate('TimeSheet', {TokenTimeSheet}) }>
 
-            <Image 
-              style={styles.ImageStyle}
-              source={require('../UI/components/Image/timeSheet.png')}
-              />
-            <Text style = {styles.nameStyle}>Time entry</Text>
-          </TouchableOpacity>
+        <View style = {styles.pageView}>
+            <View style = {styles.rowView}>
+                <View style = {styles.imageView}>
+                    <TouchableOpacity onPress= { () => navigate('TimeSheet', {TokenTimeSheet}) }>
+                    <Image 
+                        style={styles.ImageStyle}
+                        source={require('../UI/components/Image/timeSheet.png')}
+                    />
+                    <Text style = {styles.ImageTextStyle}>
+                        Time Entry
+                    </Text>
+                    </TouchableOpacity>
+                </View>
 
-          <TouchableOpacity 
-        
-            style={styles.imageContainer}
-            // onPress= { () => navigate('TimeSheet', {TokenTimeSheet}) }
-            >
+                <View style = {styles.imageView}>
+                    <TouchableOpacity>
+                    <Image 
+                        style={styles.ImageStyle}
+                        source={require('../UI/components/Image/pettyCash.png')}
+                    />
+                    <Text style = {styles.ImageTextStyle}>
+                        Petty Cash
+                    </Text>
+                    </TouchableOpacity>
+                </View>
+            </View>
 
-            <Image 
-              style={styles.ImageStyle}
-              source={require('../UI/components/Image/medicalClaim.png')}
-              />
-            <Text>Medical claim</Text>
-          </TouchableOpacity>
+            <View style = {styles.rowView}>
+                <View style = {styles.imageView}>
+                    <TouchableOpacity>
+                    <Image 
+                        style={styles.ImageStyle}
+                        source={require('../UI/components/Image/medicalClaim.png')}
+                    />
+                    <Text style = {styles.ImageTextStyle}>
+                        Medical Claim
+                    </Text>
+                    </TouchableOpacity>
+                </View>
+
+                <View style = {styles.imageView}>
+                    <TouchableOpacity>
+                    <Image 
+                        style={styles.ImageStyle}
+                        source={require('../UI/components/Image/salesManager.png')}
+                    />
+                    <Text style = {styles.ImageTextStyle}>
+                        Sales Manager 
+                    </Text>
+                    </TouchableOpacity>
+                </View>
+            </View>
         </View>
+        
       </View>
 
     
@@ -98,28 +126,10 @@ fetchData = async () => {
 export default DashBoard;
 
 const styles = StyleSheet.create({
-  ImageStyle: {
-    
-    height: 60,
-    width: 60
-  },
-  imageContainer: {
-    // height: 80,
-    // width: 80,
-    paddingTop: 20,
-    paddingLeft: 80
-  },
-  imageDirection1: {
-    // paddingLeft: 60,
-    flexDirection: 'row',
-    // backgroundColor: '#dddd'
-  },
-  imageDirection2: {
-    flexDirection: "column"
-  },
+  
   container: {
     flex: 1,
-    backgroundColor: '#ddd'
+    backgroundColor: '#87CEEB'
   },
   textStyle: {
     paddingTop: 20,
@@ -127,7 +137,32 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: '#00008b'
   },
-  nameStyle: {
-    justifyContent: 'center'
-  }
+  pageView: {
+    flex: 1,
+    backgroundColor: '#87CEEB',
+    flexDirection: 'column',
+    paddingTop: 60
+},
+rowView: {
+    flexDirection: 'row'
+},
+ImageStyle: {
+    // borderWidth: 1,
+    // borderColor: 'yellow',
+    height: 180,
+    width: 180,
+},
+imageView: {
+    flex: .5,
+    // borderWidth: 1,
+    // borderColor: 'red',
+    height: '70 %' ,
+    justifyContent: 'center',
+    alignItems: 'center'
+},
+ImageTextStyle: {
+    // borderWidth: 1,
+    // borderColor: 'green',
+    textAlign: 'center'
+}
 })

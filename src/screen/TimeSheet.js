@@ -23,7 +23,7 @@ export default class App extends Component {
   static navigationOptions={ 
     // header:null,
     tabBarVisible:true ,
-    title: 'Time Entry sheet'
+    title: 'Time Entry Sheet'
 }
   constructor(props) {
     super(props);
@@ -39,10 +39,10 @@ export default class App extends Component {
       date3: '',
       date4: '',
       date5: '',
+      date6: '',
+      date7: '',
       i:'',
-
-      postList:[]
-     
+      testDate:''
     };
   }
   componentDidMount() {
@@ -54,19 +54,91 @@ export default class App extends Component {
       };
 
       var toDayActivities = new Date();
-      var tomorrow = new Date().addDays(1);
-      var dayAfterTomorrow = new Date().addDays(2);
-      var yesterday = new Date().addDays(-1);
-      var dayBeforeYesterday = new Date().addDays(-2);
+      var mon ,tue,wed,thu,fri,sat,sun
       var TokenTimeSheetInternal =  this.params.TokenTimeSheet
+      var TestDate = new Date(toDayActivities).getDay();
+
+      if(TestDate ==1){
+        TestDate='MON'
+        mon = toDayActivities;
+        tue = new Date().addDays(1);
+        wed = new Date().addDays(2);
+        thu = new Date().addDays(3);
+        fri = new Date().addDays(4);
+        sat = new Date().addDays(5);
+        sun = new Date().addDays(6);
+      }
+      else if(TestDate ==2){
+        TestDate='TUE'
+        mon = new Date().addDays(-1);
+        tue = toDayActivities;
+        wed = new Date().addDays(1);
+        thu = new Date().addDays(2);
+        fri = new Date().addDays(3);
+        sat = new Date().addDays(4);
+        sun = new Date().addDays(5);
+      }
+      else if(TestDate ==3){
+        TestDate='WED'
+        mon = new Date().addDays(-2);
+        tue = new Date().addDays(-1);
+        wed = toDayActivities;
+        thu = new Date().addDays(1);
+        fri = new Date().addDays(2);
+        sat = new Date().addDays(3);
+        sun = new Date().addDays(4);
+      }
+      else if(TestDate ==4){
+        TestDate='THU';
+        mon = new Date().addDays(-3);
+        tue = new Date().addDays(-2);
+        wed = new Date().addDays(-1);
+        thu = toDayActivities;
+        fri = new Date().addDays(1);
+        sat = new Date().addDays(2);
+        sun = new Date().addDays(3);
+      }
+      else if(TestDate ==5){
+        TestDate='FRI';
+        mon = new Date().addDays(-4);
+        tue = new Date().addDays(-3);
+        wed = new Date().addDays(-2);
+        thu = new Date().addDays(-1);
+        fri = toDayActivities;
+        sat = new Date().addDays(1);
+        sun = new Date().addDays(2);
+      }
+      else if(TestDate ==6){
+        TestDate='SAT';
+        mon = new Date().addDays(-5);
+        tue = new Date().addDays(-4);
+        wed = new Date().addDays(-3);
+        thu = new Date().addDays(-2);
+        fri = new Date().addDays(-1);
+        sat = toDayActivities;
+        sun = new Date().addDays(1);
+      }
+      else if(TestDate ==0){
+        TestDate='SUT';
+        mon = new Date().addDays(-6);
+        tue = new Date().addDays(-5);
+        wed = new Date().addDays(-4);
+        thu = new Date().addDays(-3);
+        fri = new Date().addDays(-2);
+        sat = new Date().addDays(-1);
+        sun = toDayActivities;
+      }
+      
     
     that.setState({
-      //Setting the value of the date time
-      date1: dayBeforeYesterday.getDate(),
-      date2: yesterday.getDate(),
-      date3: toDayActivities.getDate(),
-      date4: tomorrow.getDate(),
-      date5: dayAfterTomorrow.getDate() 
+      date1 : mon.getDate(),
+      date2 : tue.getDate(),
+      date3 : wed.getDate(),
+      date4 : thu.getDate(),
+      date5 : fri.getDate(),
+      date6 : sat.getDate(),
+      date7 : sun.getDate(),
+      testDate:TestDate
     });
   }
 
@@ -90,7 +162,6 @@ export default class App extends Component {
           let ToDayTask = [];
           let DelayedTask = [];
           let ToTestarray = [];
-          // let ToTestarray=["09/02/2012","06/04/2010","02/01/2018"]
 
           for (i = 0 ; i < responseJson.activityList.length ; i = i + 1)
           {
@@ -115,7 +186,7 @@ export default class App extends Component {
 }
   render() {
     // how to view token import from previous page
-
+    var mon='Mon'
     const { navigate } = this.props.navigation;
 
     return (
@@ -125,45 +196,153 @@ export default class App extends Component {
             <Icon style={styles.iconStyle} name="ios-notifications" size = {30}/>
           
           <View style={styles.style1}>
-            <View style= {styles.dateFrame}>
+
+          {this.state.testDate =='MON'?<View style= {styles.dateFrame2}>
               <TouchableOpacity style= {styles.dateFrame1}>
                 <Text style={styles.style2}>
                   {this.state.date1}
                 </Text>
+                <Text style={styles.style3}>{'MON'}</Text>
               </TouchableOpacity>
-            </View>
-          
-          <View style= {styles.dateFrame}>
+            </View>: null}
+
+          {this.state.testDate !='MON'?<View style= {styles.dateFrame}>
+              <TouchableOpacity style= {styles.dateFrame1}>
+                <Text style={styles.style2}>
+                  {this.state.date1}
+                </Text>
+                <Text style={styles.style3}>{'MON'}</Text>
+              </TouchableOpacity>
+            </View>: null}
+
+          {this.state.testDate =='TUE'?<View style= {styles.dateFrame2}>
             <TouchableOpacity>
               <Text style={styles.style2}>
                 {this.state.date2}
               </Text>
+              <Text style={styles.style3}>
+                {'TUE'}
+                </Text>
             </TouchableOpacity>
-          </View>
+          </View>: null}
 
-          <View style= {styles.dateFrame}>
+            {this.state.testDate !='TUE'?<View style= {styles.dateFrame}>
+            <TouchableOpacity>
+              <Text style={styles.style2}>
+                {this.state.date2}
+              </Text>
+              <Text style={styles.style3}>
+                {'TUE'}
+                </Text>
+            </TouchableOpacity>
+          </View>: null}
+
+
+          {this.state.testDate =='WED'?<View style= {styles.dateFrame2}>
             <TouchableOpacity>
               <Text style={styles.style2}>
                 {this.state.date3}
               </Text>
+              <Text style={styles.style3}>
+                {'WED'}
+                </Text>
             </TouchableOpacity>
-          </View>
+          </View>: null}
+          {this.state.testDate !='WED'?<View style= {styles.dateFrame}>
+            <TouchableOpacity>
+              <Text style={styles.style2}>
+                {this.state.date3}
+              </Text>
+              <Text style={styles.style3}>
+                {'WED'}
+                </Text>
+            </TouchableOpacity>
+          </View>: null}
 
-          <View style= {styles.dateFrame}>
+          {this.state.testDate =='THU'?<View style= {styles.dateFrame2}>
             <TouchableOpacity>
               <Text style={styles.style2}>
                 {this.state.date4}
               </Text>
+               <Text style={styles.style3}>{'THU'}</Text>
             </TouchableOpacity>
-          </View>
+          </View> : null}
 
-          <View style= {styles.dateFrame}>
+          {this.state.testDate !='THU'?<View style= {styles.dateFrame}>
+            <TouchableOpacity>
+              <Text style={styles.style2}>
+                {this.state.date4}
+              </Text>
+               <Text style={styles.style3}>{'THU'}</Text>
+            </TouchableOpacity>
+          </View> : null}
+
+
+          {this.state.testDate =='FRI'?<View style= {styles.dateFrame2}>
             <TouchableOpacity>
               <Text style={styles.style2}>
                 {this.state.date5}
               </Text>
+              <Text style={styles.style3}>
+                {'FRI'}
+                </Text>
             </TouchableOpacity>
-          </View>
+          </View> : null}
+
+          {this.state.testDate !='FRI'?<View style= {styles.dateFrame}>
+            <TouchableOpacity>
+              <Text style={styles.style2}>
+                {this.state.date5}
+              </Text>
+              <Text style={styles.style3}>
+                {'FRI'}
+                </Text>
+            </TouchableOpacity>
+          </View>: null}
+
+          {this.state.testDate =='SAT'?<View style= {styles.dateFrame2}>
+            <TouchableOpacity>
+              <Text style={styles.style2}>
+                {this.state.date6}
+              </Text>
+              <Text style={styles.style4}>
+                {'SAT'}
+                </Text>
+            </TouchableOpacity>
+          </View>: null}
+
+          {this.state.testDate !='SAT'?<View style= {styles.dateFrame}>
+            <TouchableOpacity>
+              <Text style={styles.style2}>
+                {this.state.date6}
+              </Text>
+              <Text style={styles.style4}>
+                {'SAT'}
+                </Text>
+            </TouchableOpacity>
+          </View>: null}
+
+          {this.state.testDate =='SUN'?<View style= {styles.dateFrame2}>
+            <TouchableOpacity>
+              <Text style={styles.style2}>
+                {this.state.date7}
+              </Text>
+              <Text style={styles.style5}>
+                {'SUN'}
+                </Text>
+            </TouchableOpacity>
+          </View>: null}    
+
+          {this.state.testDate !='SUN'?<View style= {styles.dateFrame}>
+            <TouchableOpacity>
+              <Text style={styles.style2}>
+                {this.state.date7}
+              </Text>
+              <Text style={styles.style5}>
+                {'SUN'}
+                </Text>
+            </TouchableOpacity>
+          </View>: null}
         </View>
 
         <View>
@@ -172,29 +351,17 @@ export default class App extends Component {
           </Text>
 
           <View style= {styles.container}>
-            
-            {/* {
-                this.state.AllActivities.map(( item, key ) =>
-                (
-                  <View key = { key } style = { styles.item }>
-                    <Text style = { styles.text2 }>{ item }</Text>
-                    <View style = { styles.separator }/>
-                  </View>
-                ))
-              } */}
               {
                 this.state.delayedActivities.map(( item, key ) =>
                 (
                   <View key = { key } style = { styles.item }>
                     <TouchableOpacity onPress={this.openModal}>
-                     {/* <TouchableOpacity onPress = { () => navigate(this.openModel) }> */}
                       <Text style = { styles.text2 }>{ item }</Text>
                     </TouchableOpacity>
                     <View style = { styles.separator }/> 
                   </View>
                 ))
               }
-
               {
                 this.state.toDayActivity.map(( item, key ) =>
                 (
@@ -241,8 +408,6 @@ export default class App extends Component {
             </View>
           </Modal>
         </View>
-
-        
 
       <View>
         <View>
@@ -340,8 +505,8 @@ const styles = StyleSheet.create({
   
   separator:
   {
-    height: 2,
-    backgroundColor: 'rgba(0,0,0,0.5)',
+    height: 1,
+    backgroundColor: 'rgba(255,255,0,0.3)',
     width: '100%'
   },
  
@@ -350,17 +515,22 @@ const styles = StyleSheet.create({
     fontSize: 15,
     color: 'black',
     padding: 5,
+    padding: 5,
     borderWidth: 1,
     borderColor: 'black',
-    width: '100%',
-    backgroundColor: '#90ee90'
+    backgroundColor: '#74e368',
+    justifyContent: 'center',
+    width: '100%'
   },
   text2:
   {
     fontSize: 15,
     color: 'black',
     padding: 5,
-    backgroundColor: '#f08080'
+    backgroundColor: '#ef3939',
+    borderColor: 'black',
+    width: '100%',
+    justifyContent: 'center'
   },
   style1: {
     // paddingLeft: 70,
@@ -369,22 +539,50 @@ const styles = StyleSheet.create({
     justifyContent: 'center'
   },
   style2: {
-    fontSize: 20,
-    marginTop: 16,
-    width: 50,
-    paddingLeft: 20
+    fontSize: 15,
+    marginTop: 8,
+    width: 40,
+    paddingLeft: 15
+  },
+  style3: {
+    fontSize: 12,
+    //marginTop: 9,
+    //width: 40,
+    color: '#2196f3',
+    paddingLeft: 8
+  },
+  style4: {
+    fontSize: 12,
+    //marginTop: 9,
+    //width: 40,
+    color: '#606970',
+    paddingLeft: 8
+  },
+  style5: {
+    fontSize: 12,
+    //marginTop: 9,
+    //width: 40,
+    color: '#f08080',
+    paddingLeft: 8
   },
   dateFrame: {
     borderWidth: 1,
-    borderColor: "#deb887",
-    borderRadius: 10
-  },
+    borderColor: "#000000",
+    borderRadius: 6,
+    backgroundColor: '#cfcab0'
+    
+    },
+    dateFrame2: {
+    borderWidth: 1,
+    borderColor: "#f3d321",
+    borderRadius: 6,
+    backgroundColor: '#f3d321'
+    },
   dateFrame1: {
     justifyContent: 'center'
   },
   TextStyle: {
     fontSize: 18,
-    textDecorationLine: 'underline',
     color: '#000000',
     paddingLeft: 20
   },

@@ -6,7 +6,7 @@ class Edit extends Component {
     static navigationOptions={ 
         // header:null,
         tabBarVisible:true ,
-        title: 'DashBoard',
+        title: 'Edit',
         // tabBarOptions: {
         //     inactiveTintColor: 'red',
         // }
@@ -14,9 +14,9 @@ class Edit extends Component {
 
 render () {
     return (
-        <View style = {styles.pageView}>
-            
-        </View>
+      <View>
+          <Text>Edit</Text>
+      </View>  
     )
 }
 }
@@ -24,8 +24,5 @@ render () {
 export default Edit;
 
 const styles = StyleSheet.create({
-    pageView: {
-        flex: 1,
-        backgroundColor: '#48D1CC'
-    }
+    
 })
