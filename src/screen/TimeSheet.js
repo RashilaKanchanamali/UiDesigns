@@ -17,7 +17,7 @@ export default class App extends Component {
 
   openModal = () => this.setState({ open: true });
 
-  // closeModal = () => this.setState({ open: true });
+  closeModal = () => this.setState({ open: false });
 
 
   static navigationOptions={ 
@@ -119,7 +119,7 @@ export default class App extends Component {
     const { navigate } = this.props.navigation;
 
     return (
-      <View >
+      <View style = {styles.fullView}>
         <ScrollView>
           
             <Icon style={styles.iconStyle} name="ios-notifications" size = {30}/>
@@ -171,11 +171,6 @@ export default class App extends Component {
             {'\n'}Tasks{'\n'}
           </Text>
 
-          <Text>
-          {/* {this.state.toDayActivities.description} */}
-          {/* {this.state.toDayActivities[0]} */}
-          </Text>
-
           <View style= {styles.container}>
             
             {/* {
@@ -192,6 +187,7 @@ export default class App extends Component {
                 (
                   <View key = { key } style = { styles.item }>
                     <TouchableOpacity onPress={this.openModal}>
+                     {/* <TouchableOpacity onPress = { () => navigate(this.openModel) }> */}
                       <Text style = { styles.text2 }>{ item }</Text>
                     </TouchableOpacity>
                     <View style = { styles.separator }/> 
@@ -203,7 +199,7 @@ export default class App extends Component {
                 this.state.toDayActivity.map(( item, key ) =>
                 (
                   <View key = { key } style = { styles.item }>
-                    <TouchableOpacity onPress={this.openModal}>
+                    <TouchableOpacity onPress={(this.openModal, {ToTestarray})}>
                       <Text style = { styles.text }>{ item }</Text>
                     </TouchableOpacity>
                     <View style = { styles.separator }/>
@@ -213,16 +209,12 @@ export default class App extends Component {
           </View>
           
             <Modal
+              // transparent={true}
+              style = {styles.modelStyle} 
               offset={this.state.offset}
               open={this.state.open}
               modalDidOpen={this.modalDidOpen}
               modalDidClose={this.modalDidClose}>
-
-            {/* <View style={{ alignItems: "center" }}>
-              <TouchableOpacity style={{ margin: 5 }} onPress={this.closeModal}>
-                <Text>Close modal</Text>
-              </TouchableOpacity>
-            </View> */}
 
             <View style = {styles.popupStyle}>
               <Button style = {{ margin: 5}} onPress = { () => navigate('Done') }>
@@ -233,6 +225,18 @@ export default class App extends Component {
             <View style = {styles.popupStyle}>
               <Button style = {{ margin: 5}} onPress = { () => navigate('Postpone') }>
                 <Text> Postpone </Text>
+              </Button>
+            </View>
+
+            <View style = {styles.popupStyle}>
+              <Button style = {{ margin: 5}} onPress = { () => navigate('Edit') }>
+                <Text> Edit </Text>
+              </Button>
+            </View>
+
+            <View style = {styles.popupStyle}>
+              <Button style = {{ margin: 5}} onPress={this.closeModal}>
+                <Text> Cancel </Text>
               </Button>
             </View>
           </Modal>
@@ -348,14 +352,15 @@ const styles = StyleSheet.create({
     padding: 5,
     borderWidth: 1,
     borderColor: 'black',
-    width: '100%'
+    width: '100%',
+    backgroundColor: '#90ee90'
   },
   text2:
   {
     fontSize: 15,
     color: 'black',
     padding: 5,
-    backgroundColor: 'rgba(255, 0, 0, 0.8)'
+    backgroundColor: '#f08080'
   },
   style1: {
     // paddingLeft: 70,
@@ -419,6 +424,12 @@ const styles = StyleSheet.create({
  popupModelStyle: {
    borderWidth: 1,
    borderColor: 'red'
+ },
+ modelStyle: {
+   backgroundColor: 'black'
+ },
+ fullView: {
+   backgroundColor: '#dcdcdc'
  }
 });
 

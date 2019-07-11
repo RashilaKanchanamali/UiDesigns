@@ -70,7 +70,20 @@ fetchData = async () => {
               style={styles.ImageStyle}
               source={require('../UI/components/Image/timeSheet.png')}
               />
-            <Text>Time entry</Text>
+            <Text style = {styles.nameStyle}>Time entry</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity 
+        
+            style={styles.imageContainer}
+            // onPress= { () => navigate('TimeSheet', {TokenTimeSheet}) }
+            >
+
+            <Image 
+              style={styles.ImageStyle}
+              source={require('../UI/components/Image/medicalClaim.png')}
+              />
+            <Text>Medical claim</Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -91,11 +104,13 @@ const styles = StyleSheet.create({
     width: 60
   },
   imageContainer: {
-    
-    paddingTop: 20
+    // height: 80,
+    // width: 80,
+    paddingTop: 20,
+    paddingLeft: 80
   },
   imageDirection1: {
-    paddingLeft: 60,
+    // paddingLeft: 60,
     flexDirection: 'row',
     // backgroundColor: '#dddd'
   },
@@ -111,5 +126,8 @@ const styles = StyleSheet.create({
     paddingLeft: 200,
     fontSize: 16,
     color: '#00008b'
+  },
+  nameStyle: {
+    justifyContent: 'center'
   }
 })

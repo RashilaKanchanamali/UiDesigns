@@ -23,7 +23,7 @@ const styles = {
     },
     buttonStyle: {
         backgroundColor: '#00ced1',
-        borderRadius: 4,
+        borderRadius: 5,
         width: 250,
         borderColor: '#00ffff',
         borderWidth: 1

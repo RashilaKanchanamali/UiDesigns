@@ -1,11 +1,48 @@
 import React, {Component} from 'react';
-import {Platform, StyleSheet, Text, View} from 'react-native';
-
+import {Platform, StyleSheet, Text, View, TextInput, ScrollView} from 'react-native';
+import Button from '../UI/components/Button/Button';
 export class Done extends Component {
+
+  static navigationOptions={ 
+    // header:null,
+    tabBarVisible:true ,
+    title: 'Done'
+}
+  
   render() {
     return (
       <View style={styles.container}>
-        <Text style={styles.welcome}>Welcome to done intent</Text>
+        <View style = {styles.textContainer}>
+          <Text style={styles.text1}> PB-DWH</Text>
+        </View>
+
+        <View style = {styles.textContainer}>
+          <Text style={styles.text1}> Meeting with Mr.Ruwan </Text>
+        </View>
+
+        <View style = {styles.textTime}>
+          <View style = {styles.textContainer}>
+            <TextInput style={styles.text1}>       </TextInput>
+          </View>
+          
+          <View style = {styles.textContainer}>
+            <Text>-</Text>
+          </View>
+          <View style = {styles.textContainer}>
+            <TextInput style={styles.text1}>       </TextInput>
+          </View>
+        </View>
+
+        <View style = {styles.textContainer}>
+          <TextInput style={styles.text1}> Notes {'\n'} </TextInput>
+          
+        </View>
+
+        <View style = {styles.textContainer}>
+          <Button>
+           Add to Time Sheet
+          </Button>
+        </View>
       </View>
     );
   }
@@ -15,43 +52,30 @@ export default Done;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#F5FCFF',
+    backgroundColor: '#dcdcdc',
   },
-  welcome: {
-    fontSize: 20,
-    textAlign: 'center',
-    margin: 10,
+  text1: {
+    fontSize: 16,
+    borderWidth: 1,
+    // borderRadius: 3,
+    borderColor: '#000000',
+    // width: 150,
+    height: 40,
+    paddingLeft: 10,
+    paddingRight: 10
+    
+  },
+  textContainer: {
+    alignSelf: 'flex-start',
+    paddingLeft: 10,
+    paddingTop: 20
+  },
+  textTime: {
+    flexDirection: 'row',
+    alignSelf: 'flex-start'
   }
 });
 
-      // <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-      //   <TouchableOpacity onPress={this.openModal}>
-      //     <Text>Open modal</Text>
-      //   </TouchableOpacity>
-      //   <Modal
-      //     offset={this.state.offset}
-      //     open={this.state.open}
-      //     modalDidOpen={this.modalDidOpen}
-      //     modalDidClose={this.modalDidClose}
-      //     style={{ alignItems: "center" }}
-      //   >
-      //     <View style={{ alignItems: "center" }}>
-      //       <Text style={{ fontSize: 20, marginBottom: 10 }}>Hello world!</Text>
-      //       <TouchableOpacity style={{ margin: 5 }} onPress={this.moveUp}>
-      //         <Text>Move modal up</Text>
-      //       </TouchableOpacity>
-      //       <TouchableOpacity
-      //         style={{ margin: 5 }}
-      //         onPress={this.resetPosition}
-      //       >
-      //         <Text>Reset modal position</Text>
-      //       </TouchableOpacity>
-      //       <TouchableOpacity style={{ margin: 5 }} onPress={this.closeModal}>
-      //         <Text>Close modal</Text>
-      //       </TouchableOpacity>
-      //     </View>
-      //   </Modal>
-      // </View>
+      
 
