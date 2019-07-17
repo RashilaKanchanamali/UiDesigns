@@ -92,7 +92,7 @@ fetchData = async () => {
                     <TouchableOpacity>
                     <Image 
                         style={styles.ImageStyle}
-                        source={require('../UI/components/Image/MedicalClaim.png')}
+                        source={require('../UI/components/Image/medicalClaim.png')}
                     />
                     <Text style = {styles.ImageTextStyle}>
                         Medical Claim
