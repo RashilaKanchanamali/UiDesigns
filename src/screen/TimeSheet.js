@@ -1,9 +1,16 @@
 import React, { Component } from 'react';
-import { StyleSheet, View, Alert, Text, ScrollView,AppRegistry, TouchableOpacity } from 'react-native';
+import { StyleSheet, View, Alert,FlatList, Text, ScrollView,AppRegistry, TouchableOpacity,Dimensions,TouchableHighlight } from 'react-native';
 import { TextInput } from 'react-native-gesture-handler';
 import Button from '../UI/components/Button/Button';
 import Icon from 'react-native-vector-icons/Ionicons';
 import Modal from "react-native-simple-modal";
+import moment from 'moment';
+import styles2 from './WeekView.styles';
+
+
+const { width: SCREEN_WIDTH } = Dimensions.get('window');
+const TIME_LABELS_COUNT = 48;
+
 
 
 export default class App extends Component {
@@ -15,9 +22,23 @@ export default class App extends Component {
     this.setState({ open: false });
   };
 
-  openModal = () => this.setState({ open: true });
+  openModal = (rowItem) => this.setState({ 
+             open: true ,
+             selectedDescription: rowItem.description,
+             selectCode: rowItem.code,
+             selectTimeFrom: rowItem.timeFrom,
+             selectTimeTo: rowItem.timeTo
+            });
 
   closeModal = () => this.setState({ open: false });
+
+  // onPressAction = (rowItem) => {
+  //   console.log('ListItem was selected');
+  //   console.dir(rowItem);
+  //   this.setState({
+  //     selectedItem: rowItem.description
+  //   });
+  // }
 
 
   static navigationOptions={ 
@@ -42,12 +63,23 @@ export default class App extends Component {
       date6: '',
       date7: '',
       i:'',
-      testDate:''
+      testDate:'',
+      selectedDescription:'',
+      selectCode: '',
+      selectTimeFrom: '',
+      selectTimeTo: ''
     };
+    this.calendar = null;
+    this.times = this.generateTimes();
   }
   componentDidMount() {
     var that = this;
 
+    requestAnimationFrame(() => {
+      this.calendar.scrollTo({ y: 0, x: 2 * (SCREEN_WIDTH - 60), animated: false });
+    });
+
+    
     Date.prototype.addDays = function(days) {
       this.setDate(this.getDate() + parseInt(days));
       return this;
@@ -142,6 +174,56 @@ export default class App extends Component {
     });
   }
 
+  scrollViewRef = (ref) => {
+    this.calendar = ref;
+  }
+
+  prepareDates = (currentMoment, numberOfDays) => {
+    const dates = [];
+    for (let i = -2; i < 3; i += 1) {
+      const date = moment(currentMoment).add(numberOfDays * i, 'd');
+      dates.push(date);
+    }
+    return dates;
+  };
+  
+  componentDidUpdate() {
+    this.calendar.scrollTo({ y: 0, x: 2 * (SCREEN_WIDTH - 60), animated: false });
+  }
+
+  generateTimes = () => {
+    const times = [];
+    for (let i = 0; i < TIME_LABELS_COUNT; i += 1) {
+      const minutes = i % 2 === 0 ? '00' : '15';
+      const hour = Math.floor(i / 2);
+      const time = `${hour}:${minutes}`;
+      times.push(time);
+    }
+    return times;
+  };
+
+  scrollEnded = (event) => {
+    const { nativeEvent: { contentOffset, contentSize } } = event;
+    const { x: position } = contentOffset;
+    const { width: innerWidth } = contentSize;
+    const newPage = (position / innerWidth) * 5;
+    const { onSwipePrev, onSwipeNext, numberOfDays } = this.props;
+    const { currentMoment } = this.state;
+    requestAnimationFrame(() => {
+      const newMoment = moment(currentMoment)
+        .add((newPage - 2) * numberOfDays, 'd')
+        .toDate();
+
+      this.setState({ currentMoment: newMoment });
+
+      if (newPage < 2) {
+        onSwipePrev && onSwipePrev(newMoment);
+      } else if (newPage > 2) {
+        onSwipeNext && onSwipeNext(newMoment);
+      }
+    });
+  };
+
   componentWillMount() {
     this.fetchData();
   }
@@ -185,173 +267,208 @@ export default class App extends Component {
         })
 }
   render() {
+    const {
+      numberOfDays,
+      headerStyle,
+      formatDateHeader,
+      onEventPress,
+      events,
+    } = this.props;
+      var SelectedDescription= this.state.selectedDescription
+      var SelectCode= this.state.selectCode
+      var SelectTimeFrom= this.state.selectTimeFrom
+      var SelectTimeTo= this.state.selectTimeTo
+      var TokenTimeSheetInternal =  this.params.TokenTimeSheet
+
     // how to view token import from previous page
-    var mon='Mon'
+
     const { navigate } = this.props.navigation;
+    const { currentMoment } = this.state;
+    const dates = this.prepareDates(currentMoment, numberOfDays);
 
     return (
       <View style = {styles.fullView}>
         <ScrollView>
-          
-            <Icon style={styles.iconStyle} name="ios-notifications" size = {30}/>
-          
-          <View style={styles.style1}>
+          <Icon style={styles.iconStyle} name="ios-notifications" size = {30}/>
 
-          {this.state.testDate =='MON'?<View style= {styles.dateFrame2}>
-              <TouchableOpacity style= {styles.dateFrame1}>
+          <View style = {styles.calenderStyle}>
+            <View style={styles.style1}>
+
+            {this.state.testDate =='MON'?<View style= {styles.dateFrame2}>
+                <TouchableOpacity style= {styles.dateFrame1}>
+                  <Text style={styles.style2}>
+                    {this.state.date1}
+                  </Text>
+                  <Text style={styles.style3}>{'MON'}</Text>
+                </TouchableOpacity>
+              </View>: null}
+
+            {this.state.testDate !='MON'?<View style= {styles.dateFrame}>
+                <TouchableOpacity style= {styles.dateFrame1}>
+                  <Text style={styles.style2}>
+                    {this.state.date1}
+                  </Text>
+                  <Text style={styles.style3}>{'MON'}</Text>
+                </TouchableOpacity>
+              </View>: null}
+
+            {this.state.testDate =='TUE'?<View style= {styles.dateFrame2}>
+              <TouchableOpacity>
                 <Text style={styles.style2}>
-                  {this.state.date1}
+                  {this.state.date2}
                 </Text>
-                <Text style={styles.style3}>{'MON'}</Text>
+                <Text style={styles.style3}>
+                  {'TUE'}
+                  </Text>
               </TouchableOpacity>
             </View>: null}
 
-          {this.state.testDate !='MON'?<View style= {styles.dateFrame}>
-              <TouchableOpacity style= {styles.dateFrame1}>
+              {this.state.testDate !='TUE'?<View style= {styles.dateFrame}>
+              <TouchableOpacity>
                 <Text style={styles.style2}>
-                  {this.state.date1}
+                  {this.state.date2}
                 </Text>
-                <Text style={styles.style3}>{'MON'}</Text>
+                <Text style={styles.style3}>
+                  {'TUE'}
+                  </Text>
               </TouchableOpacity>
             </View>: null}
 
-          {this.state.testDate =='TUE'?<View style= {styles.dateFrame2}>
-            <TouchableOpacity>
-              <Text style={styles.style2}>
-                {this.state.date2}
-              </Text>
-              <Text style={styles.style3}>
-                {'TUE'}
+
+            {this.state.testDate =='WED'?<View style= {styles.dateFrame2}>
+              <TouchableOpacity>
+                <Text style={styles.style2}>
+                  {this.state.date3}
                 </Text>
-            </TouchableOpacity>
-          </View>: null}
-
-            {this.state.testDate !='TUE'?<View style= {styles.dateFrame}>
-            <TouchableOpacity>
-              <Text style={styles.style2}>
-                {this.state.date2}
-              </Text>
-              <Text style={styles.style3}>
-                {'TUE'}
+                <Text style={styles.style3}>
+                  {'WED'}
+                  </Text>
+              </TouchableOpacity>
+            </View>: null}
+            {this.state.testDate !='WED'?<View style= {styles.dateFrame}>
+              <TouchableOpacity>
+                <Text style={styles.style2}>
+                  {this.state.date3}
                 </Text>
-            </TouchableOpacity>
-          </View>: null}
+                <Text style={styles.style3}>
+                  {'WED'}
+                  </Text>
+              </TouchableOpacity>
+            </View>: null}
 
-
-          {this.state.testDate =='WED'?<View style= {styles.dateFrame2}>
-            <TouchableOpacity>
-              <Text style={styles.style2}>
-                {this.state.date3}
-              </Text>
-              <Text style={styles.style3}>
-                {'WED'}
+            {this.state.testDate =='THU'?<View style= {styles.dateFrame2}>
+              <TouchableOpacity>
+                <Text style={styles.style2}>
+                  {this.state.date4}
                 </Text>
-            </TouchableOpacity>
-          </View>: null}
-          {this.state.testDate !='WED'?<View style= {styles.dateFrame}>
-            <TouchableOpacity>
-              <Text style={styles.style2}>
-                {this.state.date3}
-              </Text>
-              <Text style={styles.style3}>
-                {'WED'}
+                <Text style={styles.style3}>{'THU'}</Text>
+              </TouchableOpacity>
+            </View> : null}
+
+            {this.state.testDate !='THU'?<View style= {styles.dateFrame}>
+              <TouchableOpacity>
+                <Text style={styles.style2}>
+                  {this.state.date4}
                 </Text>
-            </TouchableOpacity>
-          </View>: null}
-
-          {this.state.testDate =='THU'?<View style= {styles.dateFrame2}>
-            <TouchableOpacity>
-              <Text style={styles.style2}>
-                {this.state.date4}
-              </Text>
-               <Text style={styles.style3}>{'THU'}</Text>
-            </TouchableOpacity>
-          </View> : null}
-
-          {this.state.testDate !='THU'?<View style= {styles.dateFrame}>
-            <TouchableOpacity>
-              <Text style={styles.style2}>
-                {this.state.date4}
-              </Text>
-               <Text style={styles.style3}>{'THU'}</Text>
-            </TouchableOpacity>
-          </View> : null}
+                <Text style={styles.style3}>{'THU'}</Text>
+              </TouchableOpacity>
+            </View> : null}
 
 
-          {this.state.testDate =='FRI'?<View style= {styles.dateFrame2}>
-            <TouchableOpacity>
-              <Text style={styles.style2}>
-                {this.state.date5}
-              </Text>
-              <Text style={styles.style3}>
-                {'FRI'}
+            {this.state.testDate =='FRI'?<View style= {styles.dateFrame2}>
+              <TouchableOpacity>
+                <Text style={styles.style2}>
+                  {this.state.date5}
                 </Text>
-            </TouchableOpacity>
-          </View> : null}
+                <Text style={styles.style3}>
+                  {'FRI'}
+                  </Text>
+              </TouchableOpacity>
+            </View> : null}
 
-          {this.state.testDate !='FRI'?<View style= {styles.dateFrame}>
-            <TouchableOpacity>
-              <Text style={styles.style2}>
-                {this.state.date5}
-              </Text>
-              <Text style={styles.style3}>
-                {'FRI'}
+            {this.state.testDate !='FRI'?<View style= {styles.dateFrame}>
+              <TouchableOpacity>
+                <Text style={styles.style2}>
+                  {this.state.date5}
                 </Text>
-            </TouchableOpacity>
-          </View>: null}
+                <Text style={styles.style3}>
+                  {'FRI'}
+                  </Text>
+              </TouchableOpacity>
+            </View>: null}
 
-          {this.state.testDate =='SAT'?<View style= {styles.dateFrame2}>
-            <TouchableOpacity>
-              <Text style={styles.style2}>
-                {this.state.date6}
-              </Text>
-              <Text style={styles.style4}>
-                {'SAT'}
+            {this.state.testDate =='SAT'?<View style= {styles.dateFrame2}>
+              <TouchableOpacity>
+                <Text style={styles.style2}>
+                  {this.state.date6}
                 </Text>
-            </TouchableOpacity>
-          </View>: null}
+                <Text style={styles.style4}>
+                  {'SAT'}
+                  </Text>
+              </TouchableOpacity>
+            </View>: null}
 
-          {this.state.testDate !='SAT'?<View style= {styles.dateFrame}>
-            <TouchableOpacity>
-              <Text style={styles.style2}>
-                {this.state.date6}
-              </Text>
-              <Text style={styles.style4}>
-                {'SAT'}
+            {this.state.testDate !='SAT'?<View style= {styles.dateFrame}>
+              <TouchableOpacity>
+                <Text style={styles.style2}>
+                  {this.state.date6}
                 </Text>
-            </TouchableOpacity>
-          </View>: null}
+                <Text style={styles.style4}>
+                  {'SAT'}
+                  </Text>
+              </TouchableOpacity>
+            </View>: null}
 
-          {this.state.testDate =='SUN'?<View style= {styles.dateFrame2}>
-            <TouchableOpacity>
-              <Text style={styles.style2}>
-                {this.state.date7}
-              </Text>
-              <Text style={styles.style5}>
-                {'SUN'}
+            {this.state.testDate =='SUN'?<View style= {styles.dateFrame2}>
+              <TouchableOpacity>
+                <Text style={styles.style2}>
+                  {this.state.date7}
                 </Text>
-            </TouchableOpacity>
-          </View>: null}    
+                <Text style={styles.style5}>
+                  {'SUN'}
+                  </Text>
+              </TouchableOpacity>
+            </View>: null}    
 
-          {this.state.testDate !='SUN'?<View style= {styles.dateFrame}>
-            <TouchableOpacity>
-              <Text style={styles.style2}>
-                {this.state.date7}
-              </Text>
-              <Text style={styles.style5}>
-                {'SUN'}
+            {this.state.testDate !='SUN'?<View style= {styles.dateFrame}>
+              <TouchableOpacity>
+                <Text style={styles.style2}>
+                  {this.state.date7}
                 </Text>
-            </TouchableOpacity>
-          </View>: null}
+                <Text style={styles.style5}>
+                  {'SUN'}
+                  </Text>
+              </TouchableOpacity>
+            </View>: null}
+          </View>
         </View>
 
-        <View>
-          <Text style = {styles.TextStyle}>
+        {/* <View style = { styles.blank}></View> */}
+
+        <Text style = {styles.TextStyle}>
             {'\n'}Tasks{'\n'}
-          </Text>
+        </Text>
+
+        <View style = {styles.taskStyle}>
 
           <View style= {styles.container}>
-              {
+          <View style = { styles.item }>
+          
+          <FlatList
+          data={this.state.AllActivities}
+          renderItem={({item}) => 
+          <TouchableOpacity onPress={() => this.openModal(item)}>
+          {item.isDelayed == true?<Text style = { styles.text2 }>{item.description}</Text> : null}
+          {item.isDelayed == false?<Text style = { styles.text }>{item.description}</Text> : null}
+          <View style = { styles.separator }/> 
+          </TouchableOpacity>
+          }
+          extraData={this.state.selectedItem}
+          keyExtractor={({id}, index) => id}
+          />
+          </View>
+          
+              {/* {
                 this.state.delayedActivities.map(( item, key ) =>
                 (
                   <View key = { key } style = { styles.item }>
@@ -372,7 +489,7 @@ export default class App extends Component {
                     <View style = { styles.separator }/>
                   </View>
                 ))
-              } 
+              }  */}
           </View>
           
             <Modal
@@ -384,13 +501,13 @@ export default class App extends Component {
               modalDidClose={this.modalDidClose}>
 
             <View style = {styles.popupStyle}>
-              <Button style = {{ margin: 5}} onPress = { () => navigate('Done') }>
+              <Button style = {{ margin: 5}} onPress = { () => navigate('Done',{SelectedDescription, SelectCode, SelectTimeFrom, SelectTimeTo, TokenTimeSheetInternal}) }>
                 <Text> Done </Text>
               </Button>
             </View>
 
             <View style = {styles.popupStyle}>
-              <Button style = {{ margin: 5}} onPress = { () => navigate('Postpone') }>
+              <Button style = {{ margin: 5}} onPress = { () => navigate('Postpone', {SelectCode, SelectTimeFrom, SelectTimeTo, TokenTimeSheetInternal}) }>
                 <Text> Postpone </Text>
               </Button>
             </View>
@@ -409,83 +526,51 @@ export default class App extends Component {
           </Modal>
         </View>
 
-      <View>
-        <View>
-          <Text style = {styles.TextStyle}>
+      <View style = { styles.blank}></View>
+
+      <Text style = {styles.TextStyle}>
               {'\n'}Time Sheet{'\n'}
-          </Text>
-        </View>
+      </Text>
 
-      <View>
-      <ScrollView>
-        <View style= {styles.TimeSheetStyle}>
-          <Text padding= '10'> 08:00 AM</Text>
-            <Text style= {styles.TimeSheet}>
+      <View style = { styles.timeSheetStyle}>
 
-            </Text>
-        </View>
-        <View style= {styles.TimeSheetStyle}>
-          <Text padding= '10'> 09:00 AM</Text>
-            <Text style= {styles.TimeSheet}>
-
-            </Text>
-        </View>
-        <View style= {styles.TimeSheetStyle}>
-          <Text padding= '10'> 10:00 AM</Text>
-            <Text style= {styles.TimeSheet}>
-
-            </Text>
-        </View>
-        <View style= {styles.TimeSheetStyle}>
-          <Text padding= '10'> 11:00 AM</Text>
-            <Text style= {styles.TimeSheet}>
-
-            </Text>
-        </View>
-        <View style= {styles.TimeSheetStyle}>
-          <Text padding= '10'> 12:00 AM</Text>
-            <Text style= {styles.TimeSheet}>
-
-            </Text>
-        </View>
-        <View style= {styles.TimeSheetStyle}>
-          <Text padding= '10'> 01:00 PM</Text>
-            <Text style= {styles.TimeSheet}>
-
-            </Text>
-        </View>
-        <View style= {styles.TimeSheetStyle}>
-          <Text padding= '10'> 02:00 PM</Text>
-            <Text style= {styles.TimeSheet}>
-
-            </Text>
-        </View>
-        <View style= {styles.TimeSheetStyle}>
-          <Text padding= '10'> 03:00 PM</Text>
-            <Text style= {styles.TimeSheet}>
-
-            </Text>
-        </View>
-        <View style= {styles.TimeSheetStyle}>
-          <Text padding= '10'> 04:00 PM</Text>
-            <Text style= {styles.TimeSheet}>
-
-            </Text>
-        </View>
-        <View style= {styles.TimeSheetStyle}>
-          <Text padding= '10'> 05:00 PM</Text>
-            <Text style= {styles.TimeSheet}>
-             
-            </Text>
-        </View>
+        <ScrollView>
+          <View style={styles2.scrollViewContent}>
+            <View style={styles2.timeColumn}>
+              {this.times.map(time => (
+                <View key={time} style={styles2.timeLabel}>
+                  <Text style={styles2.timeText}>{time}</Text>
+                </View>
+              ))}
+            </View>
+            <ScrollView
+              horizontal
+              pagingEnabled
+              automaticallyAdjustContentInsets={false}
+              onMomentumScrollEnd={this.scrollEnded}
+              ref={this.scrollViewRef}
+            >
+              {dates.map(date => (
+                <View
+                  key={date}
+                  style={{ flex: 1, width: SCREEN_WIDTH - 60 }}
+                >
+                  {/* <Events
+                    key={dates}
+                    times={this.times}
+                    selectedDate={date.toDate()}
+                    numberOfDays={numberOfDays}
+                    onEventPress={onEventPress}
+                    events={events}
+                  /> */}
+                </View>
+              ))}
+            </ScrollView>
+          </View>
         </ScrollView>
-        </View>
-        </View>
 
-        <View>
-          <TextInput
-            placeholder= {"save"}
-          />
+
+
         </View>
 
         <Button onPress = { () => navigate('Postpone')}>  Day End </Button>
@@ -500,7 +585,17 @@ const styles = StyleSheet.create({
   container:
   {
     flex: 1,
+    // borderWidth: 1,
+    // borderColor: 'black',
+     width: SCREEN_WIDTH - 2
     // paddingTop: (Platform.OS === 'ios') ? 20 : 0
+  },
+  item: {
+    borderWidth: 1,
+    // borderColor: '#FFEB3B',
+    borderRadius: 5,
+    paddingLeft: 40,
+    width: SCREEN_WIDTH - 10
   },
   
   separator:
@@ -627,7 +722,33 @@ const styles = StyleSheet.create({
    backgroundColor: 'black'
  },
  fullView: {
-   backgroundColor: '#dcdcdc'
+   backgroundColor: '#87CEEB'
+ },
+ timeSheetStyle: {
+  borderWidth: 1,
+  borderColor: '#1A237E',
+  backgroundColor: '#B2EBF2',
+  borderRadius:5
+ },
+ blank: {
+   height: 30
+ },
+ taskStyle: {
+  // borderWidth: 1,
+  // borderColor: '#1A237E',
+  // backgroundColor: '#7fffd4',
+  // borderRadius:5
+  justifyContent: 'center',
+  alignItems: 'center'
+ },
+ calenderStyle: {
+  height: 80,
+  // borderWidth: 1,
+  // borderColor: 'orange',
+  // backgroundColor: '#f0e68c',
+  // borderRadius:5,
+  justifyContent: 'center',
+  alignItems: 'center'
  }
 });
 

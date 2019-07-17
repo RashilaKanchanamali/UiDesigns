@@ -1,9 +1,7 @@
 import React, { Component } from 'react';
-import { View, Text, Platform, StyleSheet, TextInput, TouchableOpacity, Alert, Asy } from 'react-native';
+import { View, Text, Platform, StyleSheet, TextInput, KeyboardAvoidingView, Alert } from 'react-native';
 import HeadingText from '../UI/components/HeadingText/HeadingText';
 import Button from '../UI/components/Button/Button';
-import DashBoard from './DashBoard';
-
 
 class AuthScreen extends Component {
 
@@ -53,9 +51,7 @@ class AuthScreen extends Component {
                 console.log("abcd");
                 var Token =  this.state.token.token
                 this.props.navigation.navigate('DashBoard', { TokenDashBoard:Token});
-            }
-
-            //   Alert.alert((Token));
+            }    
         }) 
 }
 
@@ -125,16 +121,20 @@ const styles = StyleSheet.create({
     container: {
         flex:1,
         alignItems: "center",
-        backgroundColor: "#778899",
-        paddingTop: 20
+        backgroundColor: "#87CEEB",
+        paddingTop: 20,
+        paddingBottom: 20
     },
     container2: {
+        // flex: 2,
         paddingTop: 20,
         backgroundColor: "#fff",
         borderRadius: 20,
         width: 300,
-        height: 400,
-        alignItems: "center"
+        height: 420,
+        alignItems: "center",
+        borderWidth:1,
+        borderColor: '#e6e6fa'
     },
     textSignIn: {
         fontSize: 23,

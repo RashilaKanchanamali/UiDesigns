@@ -56,7 +56,7 @@ fetchData = async () => {
 
         <View>
           <Text style = {styles.textStyle}>
-            {this.state.user.firstName}  {this.state.user.lastName}
+            {this.state.user.firstName}
             </Text>
         </View>
 
@@ -66,7 +66,7 @@ fetchData = async () => {
                     <TouchableOpacity onPress= { () => navigate('TimeSheet', {TokenTimeSheet}) }>
                     <Image 
                         style={styles.ImageStyle}
-                        source={require('../UI/components/Image/timeSheet.png')}
+                        source={require('../UI/components/Image/timeEntry.png')}
                     />
                     <Text style = {styles.ImageTextStyle}>
                         Time Entry
@@ -92,7 +92,7 @@ fetchData = async () => {
                     <TouchableOpacity>
                     <Image 
                         style={styles.ImageStyle}
-                        source={require('../UI/components/Image/medicalClaim.png')}
+                        source={require('../UI/components/Image/MedicalClaim.png')}
                     />
                     <Text style = {styles.ImageTextStyle}>
                         Medical Claim
@@ -104,7 +104,7 @@ fetchData = async () => {
                     <TouchableOpacity>
                     <Image 
                         style={styles.ImageStyle}
-                        source={require('../UI/components/Image/salesManager.png')}
+                        source={require('../UI/components/Image/salseManager.png')}
                     />
                     <Text style = {styles.ImageTextStyle}>
                         Sales Manager 
@@ -132,33 +132,44 @@ const styles = StyleSheet.create({
     backgroundColor: '#87CEEB'
   },
   textStyle: {
-    paddingTop: 20,
-    paddingLeft: 200,
+    paddingTop: 10,
+    // paddingBottom: 20,
+    alignSelf: 'flex-end',
+    paddingRight: 20,
     fontSize: 16,
-    color: '#00008b'
+    color: '#483d8b'
   },
   pageView: {
     flex: 1,
     backgroundColor: '#87CEEB',
     flexDirection: 'column',
-    paddingTop: 60
+    paddingTop: 50,
+    // borderWidth: 4,
+    // borderColor: '#00ffff',
+    borderRadius: 6
 },
 rowView: {
-    flexDirection: 'row'
+    flexDirection: 'row',
+    // borderWidth: 1,
+    // borderColor: 'pink'
 },
 ImageStyle: {
     // borderWidth: 1,
     // borderColor: 'yellow',
-    height: 180,
-    width: 180,
+    // height: 180,
+    // width: 180,
 },
 imageView: {
-    flex: .5,
-    // borderWidth: 1,
-    // borderColor: 'red',
-    height: '70 %' ,
+    flex: 3,
+    borderWidth: 2,
+    borderColor: '#00ffff',
+    // height: '70 %' ,
     justifyContent: 'center',
-    alignItems: 'center'
+    alignItems: 'center',
+    paddingBottom: 20,
+    paddingTop: 20,
+    // backgroundColor: '#ffffff',
+    borderRadius: 6
 },
 ImageTextStyle: {
     // borderWidth: 1,

@@ -8,28 +8,49 @@ export class Done extends Component {
     tabBarVisible:true ,
     title: 'Done'
 }
-  
+
+constructor(props) {
+  super(props);
+  this.params = this.props.navigation.state.params,
+
+  this.state = {
+    //default value of the date time
+ 
+  };
+  this.calendar = null;
+}
+
+
+
   render() {
+    var Description =  this.params.SelectedDescription
+    var Code = this.params.SelectCode
+    var TimeFrom = this.params.SelectTimeFrom
+    var TimeTo = this.params.SelectTimeTo
+    var Token = this.params.TokenTimeSheetInternal
+
+    const { navigate } = this.props.navigation;
+
     return (
       <View style={styles.container}>
         <View style = {styles.textContainer}>
-          <Text style={styles.text1}> PB-DWH</Text>
+          <Text style={styles.text1}> {Code} </Text>
         </View>
 
         <View style = {styles.textContainer}>
-          <Text style={styles.text1}> Meeting with Mr.Ruwan </Text>
+          <Text style={styles.text1}> {Description} </Text>
         </View>
 
         <View style = {styles.textTime}>
           <View style = {styles.textContainer}>
-            <TextInput style={styles.text1}>       </TextInput>
+            <Text style={styles.text1}> {TimeFrom} </Text>
           </View>
           
           <View style = {styles.textContainer}>
             <Text>-</Text>
           </View>
           <View style = {styles.textContainer}>
-            <TextInput style={styles.text1}>       </TextInput>
+            <Text style={styles.text1}> {TimeTo} </Text>
           </View>
         </View>
 
@@ -58,17 +79,20 @@ const styles = StyleSheet.create({
   text1: {
     fontSize: 16,
     borderWidth: 1,
-    // borderRadius: 3,
+    borderRadius: 3,
     borderColor: '#000000',
     // width: 150,
     height: 40,
-    paddingLeft: 10,
-    paddingRight: 10
+    // paddingLeft: 10,
+    // paddingRight: 10
+    
     
   },
   textContainer: {
     alignSelf: 'flex-start',
     paddingLeft: 10,
+    justifyContent: 'center',
+    alignItems: 'center',
     paddingTop: 20
   },
   textTime: {
@@ -76,6 +100,3 @@ const styles = StyleSheet.create({
     alignSelf: 'flex-start'
   }
 });
-
-      
-

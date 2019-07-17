@@ -4,11 +4,13 @@ import { TextInput } from 'react-native-gesture-handler';
 import Button from '../UI/components/Button/Button';
 import DatePicker from 'react-native-datepicker'
 
-export class Home extends Component {
+export class Postpone extends Component {
 
   constructor(props){
-    super(props)
+    super(props);
+    this.params = this.props.navigation.state.params,
     this.state = {date:"2016-05-15"}
+    
   }
 
   static navigationOptions={ 
@@ -18,25 +20,33 @@ export class Home extends Component {
 }
 
   render() {
+
+    var Code = this.params.SelectCode
+    var TimeFrom = this.params.SelectTimeFrom
+    var TimeTo = this.params.SelectTimeTo
+    var Token = this.params.TokenTimeSheetInternal
+
+    const { navigate } = this.props.navigation;
+
     return (
       <View style={styles.container}>
         <Text style = {styles.topic}>Reason</Text>
           <View style = {styles.textContainer}>
-          <TextInput 
+          <Text 
           multiline={true}
-          style={styles.text1}></TextInput>
+          style={styles.text1}> {Code} </Text>
           </View>
 
           <View style = {styles.textTime}>
           <View style = {styles.textContainer}>
-            <TextInput style={styles.text1}>       </TextInput>
+            <TextInput style={styles.text1}> {TimeFrom} </TextInput>
           </View>
           
           <View style = {styles.textContainer}>
             <Text>-</Text>
           </View>
           <View style = {styles.textContainer}>
-            <TextInput style={styles.text1}>       </TextInput>
+            <TextInput style={styles.text1}> {TimeTo} </TextInput>
           </View>
         </View>
 
@@ -85,7 +95,7 @@ export class Home extends Component {
     );
   }
 }
-export default Home;
+export default Postpone;
 
 const styles = StyleSheet.create({
   container: {
@@ -96,7 +106,8 @@ const styles = StyleSheet.create({
   },
   topic: {
     fontSize: 18,
-    paddingLeft: 10
+    paddingLeft: 10,
+    paddingTop: 20
   },
   textContainer: {
     alignSelf: 'flex-start',
