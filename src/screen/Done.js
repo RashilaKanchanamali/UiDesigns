@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
-import {Platform, StyleSheet, Text, View, TextInput, ScrollView} from 'react-native';
+import {Platform, StyleSheet, Text, View, TextInput, KeyboardAvoidingView} from 'react-native';
 import Button from '../UI/components/Button/Button';
+import { FlatList } from 'react-native-gesture-handler';
 export class Done extends Component {
 
   static navigationOptions={ 
@@ -33,29 +34,36 @@ constructor(props) {
 
     return (
       <View style={styles.container}>
+      
         <View style = {styles.textContainer}>
-          <Text style={styles.text1}> {Code} </Text>
+          <Text style={styles.text1}> Code :  {Code} </Text>
         </View>
 
         <View style = {styles.textContainer}>
-          <Text style={styles.text1}> {Description} </Text>
+          <Text style={styles.text1}> Description :   {Description} </Text>
         </View>
 
         <View style = {styles.textTime}>
           <View style = {styles.textContainer}>
-            <Text style={styles.text1}> {TimeFrom} </Text>
+            <TextInput style={styles.text1}> Time from :   {TimeFrom} </TextInput>
           </View>
           
           <View style = {styles.textContainer}>
             <Text>-</Text>
           </View>
           <View style = {styles.textContainer}>
-            <Text style={styles.text1}> {TimeTo} </Text>
+            <TextInput style={styles.text1}> Time to :   {TimeTo} </TextInput>
           </View>
         </View>
 
-        <View style = {styles.textContainer}>
-          <TextInput style={styles.text1}> Notes {'\n'} </TextInput>
+        <Text style={styles.textContainer}> Notes : {'\n'} </Text>
+        
+        <View style = {styles.textContainer1}>
+            
+              <TextInput style = { styles.noteStyle }
+                multiline={true}
+              />
+            
           
         </View>
 
@@ -74,17 +82,15 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: 'center',
-    backgroundColor: '#87CEEB',
+    backgroundColor: '#dcdcdc',
   },
   text1: {
     fontSize: 16,
-    borderWidth: 1,
+    color: '#000000',
     borderRadius: 3,
-    borderColor: '#000000',
-    // width: 150,
     height: 40,
-    // paddingLeft: 10,
-    // paddingRight: 10
+    backgroundColor: '#e6e6fa',
+    fontWeight: 'bold'
     
     
   },
@@ -93,10 +99,25 @@ const styles = StyleSheet.create({
     paddingLeft: 10,
     justifyContent: 'center',
     alignItems: 'center',
-    paddingTop: 20
+    paddingTop: 10,
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: '#000000'
   },
   textTime: {
     flexDirection: 'row',
     alignSelf: 'flex-start'
-  }
+  },
+  noteStyle: {
+    backgroundColor: '#e6e6fa',
+    borderRadius: 5,
+    alignSelf: 'flex-start'
+  },
+  textContainer1: {
+    alignSelf: 'flex-start',
+    paddingLeft: 10,
+    paddingTop: 10,
+    fontSize: 16,
+    color: '#000000'
+  },
 });

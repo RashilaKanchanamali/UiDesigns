@@ -141,7 +141,7 @@ const styles = StyleSheet.create({
   },
   pageView: {
     flex: 1,
-    backgroundColor: '#87CEEB',
+    backgroundColor: '#dcdcdc',
     flexDirection: 'column',
     paddingTop: 50,
     // borderWidth: 4,
@@ -174,6 +174,7 @@ imageView: {
 ImageTextStyle: {
     // borderWidth: 1,
     // borderColor: 'green',
-    textAlign: 'center'
+    textAlign: 'center',
+    color: '#000000'
 }
 })

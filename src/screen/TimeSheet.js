@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { StyleSheet, View, Alert,FlatList, Text, ScrollView,AppRegistry, TouchableOpacity,Dimensions,TouchableHighlight } from 'react-native';
+import { StyleSheet, View, Alert,FlatList, Text, ScrollView,AppRegistry, TouchableOpacity,Dimensions,TouchableHighlight, CheckBox, CardItem} from 'react-native';
 import { TextInput } from 'react-native-gesture-handler';
 import Button from '../UI/components/Button/Button';
 import Icon from 'react-native-vector-icons/Ionicons';
@@ -67,7 +67,8 @@ export default class App extends Component {
       selectedDescription:'',
       selectCode: '',
       selectTimeFrom: '',
-      selectTimeTo: ''
+      selectTimeTo: '',
+      checked: false
     };
     this.calendar = null;
     this.times = this.generateTimes();
@@ -458,12 +459,20 @@ export default class App extends Component {
           data={this.state.AllActivities}
           renderItem={({item}) => 
           <TouchableOpacity onPress={() => this.openModal(item)}>
-          {item.isDelayed == true?<Text style = { styles.text2 }>{item.description}</Text> : null}
-          {item.isDelayed == false?<Text style = { styles.text }>{item.description}</Text> : null}
+          <View style={{ flexDirection: 'row' }}>
+          <CheckBox 
+            value={this.state.checked}
+            onValueChange={() => this.setState({ checked: !this.state.checked })}
+          />
+          {item.isDelayed == true?<Text style = { styles.text2 }>{item.description} { item.timeFrom}</Text> : null}
+          {item.isDelayed == false?<Text style = { styles.text }>{item.description} {item.timeTo}</Text> : null}
+          <TextInput style = {styles.descriptionTime}> </TextInput>
           <View style = { styles.separator }/> 
+          </View>
           </TouchableOpacity>
           }
-          extraData={this.state.selectedItem}
+          
+          // extraData={this.state.selectedItem}
           keyExtractor={({id}, index) => id}
           />
           </View>
@@ -594,8 +603,8 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     // borderColor: '#FFEB3B',
     borderRadius: 5,
-    paddingLeft: 40,
-    width: SCREEN_WIDTH - 10
+    // paddingLeft: 40,
+    width: SCREEN_WIDTH
   },
   
   separator:
@@ -722,7 +731,7 @@ const styles = StyleSheet.create({
    backgroundColor: 'black'
  },
  fullView: {
-   backgroundColor: '#87CEEB'
+   backgroundColor: '#dcdcdc'
  },
  timeSheetStyle: {
   borderWidth: 1,
@@ -749,6 +758,11 @@ const styles = StyleSheet.create({
   // borderRadius:5,
   justifyContent: 'center',
   alignItems: 'center'
+ },
+ descriptionTime: {
+   borderWidth: 1,
+   borderColor: '#FF00CC',
+
  }
 });
 

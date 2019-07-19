@@ -102,7 +102,7 @@ const styles = StyleSheet.create({
     flex: 1,
     // justifyContent: 'center',
     // alignItems: 'center',
-    backgroundColor: '#87CEEB',
+    backgroundColor: '#dcdcdc',
   },
   topic: {
     fontSize: 18,
@@ -112,7 +112,12 @@ const styles = StyleSheet.create({
   textContainer: {
     alignSelf: 'flex-start',
     paddingLeft: 10,
-    paddingTop: 20
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingTop: 10,
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: '#000000'
   },
   text1: {
     fontSize: 16,

@@ -14,7 +14,7 @@ class Edit extends Component {
 
 render () {
     return (
-      <View>
+      <View style = { styles.container }>
           <Text>Edit</Text>
       </View>  
     )
@@ -24,5 +24,10 @@ render () {
 export default Edit;
 
 const styles = StyleSheet.create({
-    
+    container: {
+        flex: 1,
+        // justifyContent: 'center',
+        // alignItems: 'center',
+        backgroundColor: '#dcdcdc',
+      }
 })
