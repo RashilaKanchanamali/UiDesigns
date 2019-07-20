@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { StyleSheet, View, Alert,FlatList, Text, ScrollView,AppRegistry, TouchableOpacity,Dimensions,TouchableHighlight, CheckBox, CardItem} from 'react-native';
+import { StyleSheet, View, Alert,FlatList, Text, ScrollView,AppRegistry, TouchableOpacity,Dimensions, CheckBox} from 'react-native';
 import { TextInput } from 'react-native-gesture-handler';
 import Button from '../UI/components/Button/Button';
 import Icon from 'react-native-vector-icons/Ionicons';
@@ -27,7 +27,9 @@ export default class App extends Component {
              selectedDescription: rowItem.description,
              selectCode: rowItem.code,
              selectTimeFrom: rowItem.timeFrom,
-             selectTimeTo: rowItem.timeTo
+             selectTimeTo: rowItem.timeTo,
+             selectId: rowItem.id,
+             selectIsDone: rowItem.isDone
             });
 
   closeModal = () => this.setState({ open: false });
@@ -68,6 +70,8 @@ export default class App extends Component {
       selectCode: '',
       selectTimeFrom: '',
       selectTimeTo: '',
+      selectId: '',
+      selectIsDone: '',
       checked: false
     };
     this.calendar = null;
@@ -279,6 +283,8 @@ export default class App extends Component {
       var SelectCode= this.state.selectCode
       var SelectTimeFrom= this.state.selectTimeFrom
       var SelectTimeTo= this.state.selectTimeTo
+      var SelectId = this.state.selectId
+      var SelectIsDone = this.state.selectIsDone
       var TokenTimeSheetInternal =  this.params.TokenTimeSheet
 
     // how to view token import from previous page
@@ -464,9 +470,8 @@ export default class App extends Component {
             value={this.state.checked}
             onValueChange={() => this.setState({ checked: !this.state.checked })}
           />
-          {item.isDelayed == true?<Text style = { styles.text2 }>{item.description} { item.timeFrom}</Text> : null}
-          {item.isDelayed == false?<Text style = { styles.text }>{item.description} {item.timeTo}</Text> : null}
-          <TextInput style = {styles.descriptionTime}> </TextInput>
+          {item.isDelayed == true?<Text style = { styles.text2 }>{item.description} - {moment(item.date).format('DD/MM/YYYY')}</Text> : null}
+          {item.isDelayed == false?<Text style = { styles.text } >{item.description} - {moment(item.timeFrom).format('HH:mm')}</Text> : null}
           <View style = { styles.separator }/> 
           </View>
           </TouchableOpacity>
@@ -510,7 +515,7 @@ export default class App extends Component {
               modalDidClose={this.modalDidClose}>
 
             <View style = {styles.popupStyle}>
-              <Button style = {{ margin: 5}} onPress = { () => navigate('Done',{SelectedDescription, SelectCode, SelectTimeFrom, SelectTimeTo, TokenTimeSheetInternal}) }>
+              <Button style = {{ margin: 5}} onPress = { () => navigate('Done',{SelectedDescription, SelectCode, SelectTimeFrom, SelectTimeTo, SelectId, SelectIsDone, TokenTimeSheetInternal}) }>
                 <Text> Done </Text>
               </Button>
             </View>
@@ -604,12 +609,12 @@ const styles = StyleSheet.create({
     // borderColor: '#FFEB3B',
     borderRadius: 5,
     // paddingLeft: 40,
-    width: SCREEN_WIDTH
+    width: SCREEN_WIDTH - 5
   },
   
   separator:
   {
-    height: 1,
+    height: 2,
     backgroundColor: 'rgba(255,255,0,0.3)',
     width: '100%'
   },

@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Platform, StyleSheet, Text, View, TextInput, KeyboardAvoidingView} from 'react-native';
+import {Platform, StyleSheet, Text, View, TextInput, KeyboardAvoidingView, Alert} from 'react-native';
 import Button from '../UI/components/Button/Button';
 import { FlatList } from 'react-native-gesture-handler';
 export class Done extends Component {
@@ -15,12 +15,54 @@ constructor(props) {
   this.params = this.props.navigation.state.params,
 
   this.state = {
-    //default value of the date time
+    userItems: ''
  
   };
   this.calendar = null;
 }
 
+onButtonPress (){
+
+  fetch('http://192.168.2.23:100/integration/timeEntry/saveTimeEntry', {
+
+        method: 'POST',
+        headers: {
+            // 'Authorization': 'Bearer ' +this.params.TokenTimeSheetInternal,
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+    
+          activityID: this.state.userItems.activityID,
+          timeFrom: this.state.userItems.timeFrom,
+          timeTo: this.state.userItems.timeTo,
+          isDone: !this.state.userItems.isDone
+
+        })
+
+    })
+      .then(response => response.json())
+      .then((responseJson) => {
+
+        //console.warn(responseJson)
+
+        this.setState ({
+          userItems:responseJson
+        })
+      Alert.alert(JSON.stringify(responseJson));
+    }).catch((error) => {
+        Alert.alert(error);
+    });
+}
+
+renderButton() {
+  return (
+      <Button onPress={this.onButtonPress.bind(this)}>
+      SAVE
+    </Button>
+  );
+
+}
 
 
   render() {
@@ -28,6 +70,8 @@ constructor(props) {
     var Code = this.params.SelectCode
     var TimeFrom = this.params.SelectTimeFrom
     var TimeTo = this.params.SelectTimeTo
+    var Id = this.params.SelectId
+    var IsDone = this.params.IsDone
     var Token = this.params.TokenTimeSheetInternal
 
     const { navigate } = this.props.navigation;
@@ -36,7 +80,7 @@ constructor(props) {
       <View style={styles.container}>
       
         <View style = {styles.textContainer}>
-          <Text style={styles.text1}> Code :  {Code} </Text>
+          <Text style={styles.text1}> Code : {Code}</Text>
         </View>
 
         <View style = {styles.textContainer}>
@@ -67,10 +111,12 @@ constructor(props) {
           
         </View>
 
+        <Text 
+        placeholder={this.state.userItems.isDone}
+        onChangeText={isDone => this.setState({ isDone})}/>
+
         <View style = {styles.textContainer}>
-          <Button>
-           Add to Time Sheet
-          </Button>
+        {this.renderButton()}
         </View>
       </View>
     );
