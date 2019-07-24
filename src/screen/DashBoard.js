@@ -41,7 +41,7 @@ render() {
       <View style={styles.container}>
         <View>
           <Text style = {styles.textStyle}>
-            {this.state.user.firstName}
+            {this.state.user.id}
           </Text>
         </View>
         <View style = {styles.pageView}>

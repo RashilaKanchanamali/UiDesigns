@@ -7,7 +7,7 @@ class DayView extends Component {
     static navigationOptions={ 
         // header:null,
         tabBarVisible:true ,
-        title: 'Edit',
+        title: 'Day',
         // tabBarOptions: {
         //     inactiveTintColor: 'red',
         // }

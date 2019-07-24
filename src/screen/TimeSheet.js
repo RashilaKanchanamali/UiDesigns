@@ -1,17 +1,13 @@
 import React, { Component } from 'react';
-import { StyleSheet, View, Alert,FlatList, Text, ScrollView,AppRegistry, TouchableOpacity,Dimensions, CheckBox} from 'react-native';
-import { TextInput } from 'react-native-gesture-handler';
+import { StyleSheet, View ,FlatList, Text, ScrollView,AppRegistry, TouchableOpacity,Dimensions, CheckBox} from 'react-native';
 import Button from '../UI/components/Button/Button';
 import Icon from 'react-native-vector-icons/Ionicons';
 import Modal from "react-native-simple-modal";
 import moment from 'moment';
 import styles2 from './WeekView.styles';
 
-
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 const TIME_LABELS_COUNT = 48;
-
-
 
 export default class App extends Component {
   state = { 
@@ -37,25 +33,15 @@ export default class App extends Component {
             });
 
   closeModal = () => this.setState({ open: false });
-
-  // onPressAction = (rowItem) => {
-  //   console.log('ListItem was selected');
-  //   console.dir(rowItem);
-  //   this.setState({
-  //     selectedItem: rowItem.description
-  //   });
-  // }
-
-
+  
   static navigationOptions={ 
     // header:null,
     tabBarVisible:true ,
     title: 'Time Entry Sheet'
-}
+  }
   constructor(props) {
     super(props);
-    this.params = this.props.navigation.state.params,
-
+    this.params = this.props.navigation.state.params;
     this.state = {
       //default value of the date time
       AllActivities:[],
@@ -84,12 +70,10 @@ export default class App extends Component {
   }
   componentDidMount() {
     var that = this;
-
     requestAnimationFrame(() => {
       this.calendar.scrollTo({ y: 0, x: 2 * (SCREEN_WIDTH - 60), animated: false });
     });
 
-    
     Date.prototype.addDays = function(days) {
       this.setDate(this.getDate() + parseInt(days));
       return this;
@@ -171,7 +155,6 @@ export default class App extends Component {
         sun = toDayActivities;
       }
       
-    
     that.setState({
       date1 : mon.getDate(),
       date2 : tue.getDate(),
@@ -238,12 +221,15 @@ export default class App extends Component {
     this.fetchData();
   }
 
-  
   fetchData = async () => {
 
-    var API = 'http://192.168.2.23:100/integration/activity/getActivities?'
+    var API = 'http://192.168.2.23:100/integration/activity/getActivities?date='
+    var day = new Date().getDate()
+    var month = new Date().getMonth() + 1
+    var year = new Date().getFullYear()
+    var today = year+'-'+month+'-'+day
 
-    fetch ( API + 'date=2019-8-24', {
+    fetch ( API+ today , {
         method: 'GET',
         headers: {
             'Authorization': 'Bearer ' + this.params.TokenTimeSheet,
@@ -254,47 +240,14 @@ export default class App extends Component {
     .then((response) => response.json())
       .then((responseJson) => {
           
-          let ToDayTask = [];
-          let DelayedTask = [];
           let ToTestarray = [];
-
           for (i = 0 ; i < responseJson.activityList.length ; i = i + 1)
           {
             ToTestarray.push(responseJson.activityList[i]);
-
-            if(responseJson.activityList[i].isDelayed == true)
-            {
-              DelayedTask.push(responseJson.activityList[i].description);
-            }
-            else
-            {
-              ToDayTask.push(responseJson.activityList[i].description);
-            }
-
           }
-
-          this.setState({toDayActivity : ToDayTask})
-          this.setState({delayedActivities : DelayedTask})
           this.setState({AllActivities : ToTestarray})
-
-          // Alert.alert(JSON.stringify(responseJson.date));
-
         })
 }
-
-dateClicked = () => {
-  Alert.alert(
-    "Alert Title",
-    "Alert Msg",
-    [
-      { text: this.setState.selectDate },
-      
-      { text: "OK", onPress: () => console.log("OK Pressed") }
-    ],
-    { cancelable: false }
-  );
-};
-
   render() {
     const {
       numberOfDays,
@@ -312,10 +265,7 @@ dateClicked = () => {
       var SelectDate = this.state.selectDate
       var TokenTimeSheetInternal =  this.params.TokenTimeSheet
 
-      var month = new Date().getMonth() + 1;
-      var year = new Date().getFullYear();
-
-      var Date1 = 'date=' + year + '-' + month + '-' + this.state.date1
+      var Date1 = this.state.date1
       var Date2 = this.state.date2 
       var Date3 = this.state.date3 
       var Date4 = this.state.date4 
@@ -323,277 +273,229 @@ dateClicked = () => {
       var Date6 = this.state.date6 
       var Date7 = this.state.date7 
       
-
-
     // how to view token import from previous page
-
     const { navigate } = this.props.navigation;
+
     const { currentMoment } = this.state;
     const dates = this.prepareDates(currentMoment, numberOfDays);
-
     return (
       <View style = {styles.fullView}>
         <ScrollView>
           <Icon style={styles.iconStyle} name="ios-notifications" size = {30}/>
+            <View style = {styles.calenderStyle}>
+              <View style={styles.style1}>
 
-          <View style = {styles.calenderStyle}>
-            <View style={styles.style1}>
+                {this.state.testDate =='MON'?<View style= {styles.dateFrame2}>
+                    <TouchableOpacity style= {styles.dateFrame1} onPress = { () => navigate('TimeSheet',{Date1})}>
+                      <Text style={styles.style2}>
+                        {this.state.date1}
+                      </Text>
+                      <Text style={styles.style3}>{'MON'}</Text>
+                    </TouchableOpacity>
+                  </View>: null}
 
-            {this.state.testDate =='MON'?<View style= {styles.dateFrame2}>
-                <TouchableOpacity style= {styles.dateFrame1} onPress = { () => navigate('TimeSheet',{Date1})}>
+                {this.state.testDate !='MON'?<View style= {styles.dateFrame}>
+                    <TouchableOpacity style= {styles.dateFrame1} onPress = { () => navigate('TimeSheet',{Date1})}>
+                      <Text style={styles.style2}>
+                        {this.state.date1}
+                      </Text>
+                      <Text style={styles.style3}>{'MON'}</Text>
+                    </TouchableOpacity>
+                  </View>: null}
+
+                {this.state.testDate =='TUE'?<View style= {styles.dateFrame2}>
+                  <TouchableOpacity onPress = { () => navigate('DayView',{Date2})}>
+                    <Text style={styles.style2}>
+                      {this.state.date2}
+                    </Text>
+                    <Text style={styles.style3}>
+                      {'TUE'}
+                      </Text>
+                  </TouchableOpacity>
+                </View>: null}
+
+                {this.state.testDate !='TUE'?<View style= {styles.dateFrame}>
+                <TouchableOpacity onPress = { () => navigate('DayView',{Date2})}>
                   <Text style={styles.style2}>
-                    {this.state.date1}
+                    {this.state.date2}
                   </Text>
-                  <Text style={styles.style3}>{'MON'}</Text>
+                  <Text style={styles.style3}>
+                    {'TUE'}
+                    </Text>
                 </TouchableOpacity>
               </View>: null}
 
-            {this.state.testDate !='MON'?<View style= {styles.dateFrame}>
-                <TouchableOpacity style= {styles.dateFrame1} onPress = { () => navigate('TimeSheet',{Date1})}>
+              {this.state.testDate =='WED'?<View style= {styles.dateFrame2}>
+                <TouchableOpacity onPress = { () => navigate('DayView',{Date3})}>
                   <Text style={styles.style2}>
-                    {this.state.date1}
+                    {this.state.date3}
                   </Text>
-                  <Text style={styles.style3}>{'MON'}</Text>
+                  <Text style={styles.style3}>
+                    {'WED'}
+                    </Text>
                 </TouchableOpacity>
               </View>: null}
 
-            {this.state.testDate =='TUE'?<View style= {styles.dateFrame2}>
-              <TouchableOpacity onPress = { () => navigate('DayView',{Date2})}>
-                <Text style={styles.style2}>
-                  {this.state.date2}
-                </Text>
-                <Text style={styles.style3}>
-                  {'TUE'}
+              {this.state.testDate !='WED'?<View style= {styles.dateFrame}>
+                <TouchableOpacity onPress = { () => navigate('DayView',{Date3})}>
+                  <Text style={styles.style2}>
+                    {this.state.date3}
                   </Text>
-              </TouchableOpacity>
-            </View>: null}
+                  <Text style={styles.style3}>
+                    {'WED'}
+                    </Text>
+                </TouchableOpacity>
+              </View>: null}
 
-              {this.state.testDate !='TUE'?<View style= {styles.dateFrame}>
-              <TouchableOpacity onPress = { () => navigate('DayView',{Date2})}>
-                <Text style={styles.style2}>
-                  {this.state.date2}
-                </Text>
-                <Text style={styles.style3}>
-                  {'TUE'}
+              {this.state.testDate =='THU'?<View style= {styles.dateFrame2}>
+                <TouchableOpacity onPress = { () => navigate('DayView',{Date4})}>
+                  <Text style={styles.style2}>
+                    {this.state.date4}
                   </Text>
-              </TouchableOpacity>
-            </View>: null}
+                  <Text style={styles.style3}>{'THU'}</Text>
+                </TouchableOpacity>
+              </View> : null}
 
-
-            {this.state.testDate =='WED'?<View style= {styles.dateFrame2}>
-              <TouchableOpacity onPress = { () => navigate('DayView',{Date3})}>
-                <Text style={styles.style2}>
-                  {this.state.date3}
-                </Text>
-                <Text style={styles.style3}>
-                  {'WED'}
+              {this.state.testDate !='THU'?<View style= {styles.dateFrame}>
+                <TouchableOpacity onPress = { () => navigate('DayView',{Date4})}>
+                  <Text style={styles.style2}>
+                    {this.state.date4}
                   </Text>
-              </TouchableOpacity>
-            </View>: null}
-            {this.state.testDate !='WED'?<View style= {styles.dateFrame}>
-              <TouchableOpacity onPress = { () => navigate('DayView',{Date3})}>
-                <Text style={styles.style2}>
-                  {this.state.date3}
-                </Text>
-                <Text style={styles.style3}>
-                  {'WED'}
+                  <Text style={styles.style3}>{'THU'}</Text>
+                </TouchableOpacity>
+              </View> : null}
+
+              {this.state.testDate =='FRI'?<View style= {styles.dateFrame2}>
+                <TouchableOpacity onPress = { () => navigate('DayView',{Date5})}>
+                  <Text style={styles.style2}>
+                    {this.state.date5}
                   </Text>
-              </TouchableOpacity>
-            </View>: null}
+                  <Text style={styles.style3}>
+                    {'FRI'}
+                    </Text>
+                </TouchableOpacity>
+              </View> : null}
 
-            {this.state.testDate =='THU'?<View style= {styles.dateFrame2}>
-              <TouchableOpacity onPress = { () => navigate('DayView',{Date4})}>
-                <Text style={styles.style2}>
-                  {this.state.date4}
-                </Text>
-                <Text style={styles.style3}>{'THU'}</Text>
-              </TouchableOpacity>
-            </View> : null}
-
-            {this.state.testDate !='THU'?<View style= {styles.dateFrame}>
-              <TouchableOpacity onPress = { () => navigate('DayView',{Date4})}>
-                <Text style={styles.style2}>
-                  {this.state.date4}
-                </Text>
-                <Text style={styles.style3}>{'THU'}</Text>
-              </TouchableOpacity>
-            </View> : null}
-
-
-            {this.state.testDate =='FRI'?<View style= {styles.dateFrame2}>
-              <TouchableOpacity onPress = { () => navigate('DayView',{Date5})}>
-                <Text style={styles.style2}>
-                  {this.state.date5}
-                </Text>
-                <Text style={styles.style3}>
-                  {'FRI'}
+              {this.state.testDate !='FRI'?<View style= {styles.dateFrame}>
+                <TouchableOpacity onPress = { () => navigate('DayView',{Date5})}>
+                  <Text style={styles.style2}>
+                    {this.state.date5}
                   </Text>
-              </TouchableOpacity>
-            </View> : null}
+                  <Text style={styles.style3}>
+                    {'FRI'}
+                    </Text>
+                </TouchableOpacity>
+              </View>: null}
 
-            {this.state.testDate !='FRI'?<View style= {styles.dateFrame}>
-              <TouchableOpacity onPress = { () => navigate('DayView',{Date5})}>
-                <Text style={styles.style2}>
-                  {this.state.date5}
-                </Text>
-                <Text style={styles.style3}>
-                  {'FRI'}
+              {this.state.testDate =='SAT'?<View style= {styles.dateFrame2}>
+                <TouchableOpacity onPress = { () => navigate('DayView',{Date6})}>
+                  <Text style={styles.style2}>
+                    {this.state.date6}
                   </Text>
-              </TouchableOpacity>
-            </View>: null}
+                  <Text style={styles.style4}>
+                    {'SAT'}
+                    </Text>
+                </TouchableOpacity>
+              </View>: null}
 
-            {this.state.testDate =='SAT'?<View style= {styles.dateFrame2}>
-              <TouchableOpacity onPress = { () => navigate('DayView',{Date6})}>
-                <Text style={styles.style2}>
-                  {this.state.date6}
-                </Text>
-                <Text style={styles.style4}>
-                  {'SAT'}
+              {this.state.testDate !='SAT'?<View style= {styles.dateFrame}>
+                <TouchableOpacity onPress = { () => navigate('DayView',{Date6})}>
+                  <Text style={styles.style2}>
+                    {this.state.date6}
                   </Text>
-              </TouchableOpacity>
-            </View>: null}
+                  <Text style={styles.style4}>
+                    {'SAT'}
+                    </Text>
+                </TouchableOpacity>
+              </View>: null}
 
-            {this.state.testDate !='SAT'?<View style= {styles.dateFrame}>
-              <TouchableOpacity onPress = { () => navigate('DayView',{Date6})}>
-                <Text style={styles.style2}>
-                  {this.state.date6}
-                </Text>
-                <Text style={styles.style4}>
-                  {'SAT'}
+              {this.state.testDate =='SUN'?<View style= {styles.dateFrame2}>
+                <TouchableOpacity onPress = { () => navigate('DayView',{Date7})}>
+                  <Text style={styles.style2}>
+                    {this.state.date7}
                   </Text>
-              </TouchableOpacity>
-            </View>: null}
+                  <Text style={styles.style5}>
+                    {'SUN'}
+                    </Text>
+                </TouchableOpacity>
+              </View>: null}    
 
-            {this.state.testDate =='SUN'?<View style= {styles.dateFrame2}>
-              <TouchableOpacity onPress = { () => navigate('DayView',{Date7})}>
-                <Text style={styles.style2}>
-                  {this.state.date7}
-                </Text>
-                <Text style={styles.style5}>
-                  {'SUN'}
+              {this.state.testDate !='SUN'?<View style= {styles.dateFrame}>
+                <TouchableOpacity onPress = { () => navigate('DayView',{Date7})}>
+                  <Text style={styles.style2}>
+                    {this.state.date7}
                   </Text>
-              </TouchableOpacity>
-            </View>: null}    
-
-            {this.state.testDate !='SUN'?<View style= {styles.dateFrame}>
-              <TouchableOpacity onPress = { () => navigate('DayView',{Date7})}>
-                <Text style={styles.style2}>
-                  {this.state.date7}
-                </Text>
-                <Text style={styles.style5}>
-                  {'SUN'}
-                  </Text>
-              </TouchableOpacity>
-            </View>: null}
+                  <Text style={styles.style5}>
+                    {'SUN'}
+                    </Text>
+                </TouchableOpacity>
+              </View>: null}
+            </View>
           </View>
-        </View>
 
-        {/* <View style = { styles.blank}></View> */}
+          <Text style = {styles.TextStyle}>
+              {'\n'}Tasks{'\n'}
+          </Text>
 
-        <Text style = {styles.TextStyle}>
-            {'\n'}Tasks{'\n'}
-        </Text>
-
-        <View style = {styles.taskStyle}>
-
-          <View style= {styles.container}>
-          
-          <View style = { styles.item } >
-          
-          <FlatList
-          style = {styles.listTask}
-          scrollEnabled={this.state.scrollEnabled}
-          data={this.state.AllActivities}
-          renderItem={({item}) => 
-          <TouchableOpacity onPress={() => this.openModal(item)}>
-          <View style={{ flexDirection: 'row' }}>
-          <CheckBox 
-            value={this.state.checked}
-            onValueChange={() => this.setState({ checked: !this.state.checked })}
-          />
-          {item.isDelayed == true?<Text style = { styles.text2 }>{item.description} - {moment(item.date).format('DD/MM/YYYY')}</Text> : null}
-          {item.isDelayed == false?<Text style = { styles.text } >{item.description} - {moment(item.timeFrom).format('HH:mm')}</Text> : null}
-          <View style = { styles.separator }/> 
-          </View>
-          </TouchableOpacity>
-          }
-          
-          // extraData={this.state.selectedItem}
-          keyExtractor={({id}, index) => id}
-          scrollEnabled={true}
-          > 
-          </FlatList>
-          
-          </View>
-          
-              {/* {
-                this.state.delayedActivities.map(( item, key ) =>
-                (
-                  <View key = { key } style = { styles.item }>
-                    <TouchableOpacity onPress={this.openModal}>
-                      <Text style = { styles.text2 }>{ item }</Text>
+          <View style = {styles.taskStyle}>
+            <View style= {styles.container}>
+              <View style = { styles.item } >
+                <FlatList
+                  style = {styles.listTask}
+                  scrollEnabled={this.state.scrollEnabled}
+                  data={this.state.AllActivities}
+                  renderItem={({item}) => 
+                    <TouchableOpacity onPress={() => this.openModal(item)}>
+                      <View style={{ flexDirection: 'row' }}>
+                        <CheckBox 
+                        value={this.state.checked}
+                        onValueChange={() => this.setState({ checked: !this.state.checked })}/>
+                        {item.isDelayed == true?<Text style = { styles.text2 }>{item.description} - {moment(item.date).format('DD/MM/YYYY')}</Text> : null}
+                        {item.isDelayed == false?<Text style = { styles.text } >{item.description} - {moment(item.timeFrom).format('HH:mm')}</Text> : null}
+                        <View style = { styles.separator }/> 
+                      </View>
                     </TouchableOpacity>
-                    <View style = { styles.separator }/> 
-                  </View>
-                ))
-              }
-              {
-                this.state.toDayActivity.map(( item, key ) =>
-                (
-                  <View key = { key } style = { styles.item }>
-                    <TouchableOpacity onPress={(this.openModal, {ToTestarray})}>
-                      <Text style = { styles.text }>{ item }</Text>
-                    </TouchableOpacity>
-                    <View style = { styles.separator }/>
-                  </View>
-                ))
-              }  */}
-          </View>
-          
+                  }
+                  keyExtractor={({id}, index) => id}
+                  scrollEnabled={true}> 
+                </FlatList>
+              </View>
+            </View>
             <Modal
-              // transparent={true}
               style = {styles.modelStyle} 
               offset={this.state.offset}
               open={this.state.open}
               modalDidOpen={this.modalDidOpen}
               modalDidClose={this.modalDidClose}>
+              <View style = {styles.popupStyle}>
+                <Button style = {{ margin: 5}} onPress = { () => navigate('Done',{SelectedDescription, SelectCode, SelectTimeFrom, SelectTimeTo, SelectId, SelectIsDone, TokenTimeSheetInternal}) }>
+                  <Text> Done </Text>
+                </Button>
+              </View>
 
-            <View style = {styles.popupStyle}>
-              <Button style = {{ margin: 5}} onPress = { () => navigate('Done',{SelectedDescription, SelectCode, SelectTimeFrom, SelectTimeTo, SelectId, SelectIsDone, TokenTimeSheetInternal}) }>
-                <Text> Done </Text>
-              </Button>
-            </View>
+              <View style = {styles.popupStyle}>
+                <Button style = {{ margin: 5}} onPress = { () => navigate('Postpone', {SelectCode, SelectTimeFrom, SelectTimeTo, TokenTimeSheetInternal}) }>
+                  <Text> Postpone </Text>
+                </Button>
+              </View>
 
-            <View style = {styles.popupStyle}>
-              <Button style = {{ margin: 5}} onPress = { () => navigate('Postpone', {SelectCode, SelectTimeFrom, SelectTimeTo, TokenTimeSheetInternal}) }>
-                <Text> Postpone </Text>
-              </Button>
-            </View>
+              <View style = {styles.popupStyle}>
+                <Button style = {{ margin: 5}} onPress = { () => navigate('EditTask') }>
+                  <Text> Edit </Text>
+                </Button>
+              </View>
 
-            <View style = {styles.popupStyle}>
-              <Button style = {{ margin: 5}} onPress = { () => navigate('EditTask') }>
-                <Text> Edit </Text>
-              </Button>
-            </View>
-
-            <View style = {styles.popupStyle}>
-              <Button style = {{ margin: 5}} onPress={this.closeModal}>
-                <Text> Cancel </Text>
-              </Button>
-            </View>
-          </Modal>
-        </View>
-
-        <Text> {Date1} </Text>
+              <View style = {styles.popupStyle}>
+                <Button style = {{ margin: 5}} onPress={this.closeModal}>
+                  <Text> Cancel </Text>
+                </Button>
+              </View>
+            </Modal>
+          </View>
 
       <View style = { styles.blank}></View>
-
-      <Text style = {styles.TextStyle}>
-              {'\n'}Time Sheet{'\n'}
-      </Text>
-
+      <Text style = {styles.TextStyle}>{'\n'}Time Sheet{'\n'}</Text>
       <View style = { styles.timeSheetStyle}>
-
         <ScrollView>
           <View style={styles2.scrollViewContent}>
             <View style={styles2.timeColumn}>
@@ -608,36 +510,17 @@ dateClicked = () => {
               pagingEnabled
               automaticallyAdjustContentInsets={false}
               onMomentumScrollEnd={this.scrollEnded}
-              ref={this.scrollViewRef}
-            >
+              ref={this.scrollViewRef}>
               {dates.map(date => (
                 <View
                   key={date}
-                  style={{ flex: 1, width: SCREEN_WIDTH - 60 }}
-                >
-                  {/* <Events
-                    key={dates}
-                    times={this.times}
-                    selectedDate={date.toDate()}
-                    numberOfDays={numberOfDays}
-                    onEventPress={onEventPress}
-                    events={events}
-                  /> */}
+                  style={{ flex: 1, width: SCREEN_WIDTH - 60 }}>
                 </View>
               ))}
             </ScrollView>
           </View>
         </ScrollView>
-
-
-
-        </View>
-
-        <View>
-          <Text>
-            {}
-          </Text>
-        </View>
+      </View>
 
         <Button onPress = { () => navigate('Postpone')}>  Day End </Button>
         </ScrollView>
@@ -647,30 +530,22 @@ dateClicked = () => {
 }
 
 const styles = StyleSheet.create({
-
   container:
   {
     flex: 1,
-    // borderWidth: 1,
-    // borderColor: 'black',
-     width: SCREEN_WIDTH - 2
-    // paddingTop: (Platform.OS === 'ios') ? 20 : 0
+    width: SCREEN_WIDTH - 2
   },
   item: {
     borderWidth: 1,
-    // borderColor: '#FFEB3B',
     borderRadius: 5,
-    // paddingLeft: 40,
     width: SCREEN_WIDTH - 5
   },
-  
   separator:
   {
     height: 2,
     backgroundColor: 'rgba(255,255,0,0.3)',
     width: '100%'
   },
- 
   text:
   {
     fontSize: 15,
@@ -707,22 +582,16 @@ const styles = StyleSheet.create({
   },
   style3: {
     fontSize: 12,
-    //marginTop: 9,
-    //width: 40,
     color: '#2196f3',
     paddingLeft: 8
   },
   style4: {
     fontSize: 12,
-    //marginTop: 9,
-    //width: 40,
     color: '#606970',
     paddingLeft: 8
   },
   style5: {
     fontSize: 12,
-    //marginTop: 9,
-    //width: 40,
     color: '#f08080',
     paddingLeft: 8
   },
@@ -774,10 +643,6 @@ const styles = StyleSheet.create({
     paddingRight: 10
  },
  popupStyle: {
-  //  borderWidth: 1,
-  //  borderColor: 'black',
-  //  borderRadius: 10,
-  //  width: 200,
    alignItems: 'center'
  },
  popupModelStyle: {
@@ -800,26 +665,17 @@ const styles = StyleSheet.create({
    height: 30
  },
  taskStyle: {
-  // borderWidth: 1,
-  // borderColor: '#1A237E',
-  // backgroundColor: '#7fffd4',
-  // borderRadius:5
   justifyContent: 'center',
   alignItems: 'center'
  },
  calenderStyle: {
   height: 80,
-  // borderWidth: 1,
-  // borderColor: 'orange',
-  // backgroundColor: '#f0e68c',
-  // borderRadius:5,
   justifyContent: 'center',
   alignItems: 'center'
  },
  descriptionTime: {
    borderWidth: 1,
    borderColor: '#FF00CC',
-
  },
  listTask: {
    height: 200
