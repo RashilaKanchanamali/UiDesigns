@@ -14,7 +14,10 @@ const TIME_LABELS_COUNT = 48;
 
 
 export default class App extends Component {
-  state = { open: false };
+  state = { 
+    open: false,
+    scrollEnabled: true,
+  };
 
   modalDidOpen = () => console.log("Modal did open.");
 
@@ -29,7 +32,8 @@ export default class App extends Component {
              selectTimeFrom: rowItem.timeFrom,
              selectTimeTo: rowItem.timeTo,
              selectId: rowItem.id,
-             selectIsDone: rowItem.isDone
+             selectIsDone: rowItem.isDone,
+             selectDate: rowItem.date
             });
 
   closeModal = () => this.setState({ open: false });
@@ -72,6 +76,7 @@ export default class App extends Component {
       selectTimeTo: '',
       selectId: '',
       selectIsDone: '',
+      selectDate: '',
       checked: false
     };
     this.calendar = null;
@@ -156,7 +161,7 @@ export default class App extends Component {
         sun = new Date().addDays(1);
       }
       else if(TestDate ==0){
-        TestDate='SUT';
+        TestDate='SUN';
         mon = new Date().addDays(-6);
         tue = new Date().addDays(-5);
         wed = new Date().addDays(-4);
@@ -233,9 +238,12 @@ export default class App extends Component {
     this.fetchData();
   }
 
+  
   fetchData = async () => {
 
-    fetch ('http://192.168.2.23:100/integration/activity/getActivities', {
+    var API = 'http://192.168.2.23:100/integration/activity/getActivities?'
+
+    fetch ( API + 'date=2019-8-24', {
         method: 'GET',
         headers: {
             'Authorization': 'Bearer ' + this.params.TokenTimeSheet,
@@ -269,8 +277,24 @@ export default class App extends Component {
           this.setState({delayedActivities : DelayedTask})
           this.setState({AllActivities : ToTestarray})
 
+          // Alert.alert(JSON.stringify(responseJson.date));
+
         })
 }
+
+dateClicked = () => {
+  Alert.alert(
+    "Alert Title",
+    "Alert Msg",
+    [
+      { text: this.setState.selectDate },
+      
+      { text: "OK", onPress: () => console.log("OK Pressed") }
+    ],
+    { cancelable: false }
+  );
+};
+
   render() {
     const {
       numberOfDays,
@@ -285,7 +309,21 @@ export default class App extends Component {
       var SelectTimeTo= this.state.selectTimeTo
       var SelectId = this.state.selectId
       var SelectIsDone = this.state.selectIsDone
+      var SelectDate = this.state.selectDate
       var TokenTimeSheetInternal =  this.params.TokenTimeSheet
+
+      var month = new Date().getMonth() + 1;
+      var year = new Date().getFullYear();
+
+      var Date1 = 'date=' + year + '-' + month + '-' + this.state.date1
+      var Date2 = this.state.date2 
+      var Date3 = this.state.date3 
+      var Date4 = this.state.date4 
+      var Date5 = this.state.date5
+      var Date6 = this.state.date6 
+      var Date7 = this.state.date7 
+      
+
 
     // how to view token import from previous page
 
@@ -302,7 +340,7 @@ export default class App extends Component {
             <View style={styles.style1}>
 
             {this.state.testDate =='MON'?<View style= {styles.dateFrame2}>
-                <TouchableOpacity style= {styles.dateFrame1}>
+                <TouchableOpacity style= {styles.dateFrame1} onPress = { () => navigate('TimeSheet',{Date1})}>
                   <Text style={styles.style2}>
                     {this.state.date1}
                   </Text>
@@ -311,7 +349,7 @@ export default class App extends Component {
               </View>: null}
 
             {this.state.testDate !='MON'?<View style= {styles.dateFrame}>
-                <TouchableOpacity style= {styles.dateFrame1}>
+                <TouchableOpacity style= {styles.dateFrame1} onPress = { () => navigate('TimeSheet',{Date1})}>
                   <Text style={styles.style2}>
                     {this.state.date1}
                   </Text>
@@ -320,7 +358,7 @@ export default class App extends Component {
               </View>: null}
 
             {this.state.testDate =='TUE'?<View style= {styles.dateFrame2}>
-              <TouchableOpacity>
+              <TouchableOpacity onPress = { () => navigate('DayView',{Date2})}>
                 <Text style={styles.style2}>
                   {this.state.date2}
                 </Text>
@@ -331,7 +369,7 @@ export default class App extends Component {
             </View>: null}
 
               {this.state.testDate !='TUE'?<View style= {styles.dateFrame}>
-              <TouchableOpacity>
+              <TouchableOpacity onPress = { () => navigate('DayView',{Date2})}>
                 <Text style={styles.style2}>
                   {this.state.date2}
                 </Text>
@@ -343,7 +381,7 @@ export default class App extends Component {
 
 
             {this.state.testDate =='WED'?<View style= {styles.dateFrame2}>
-              <TouchableOpacity>
+              <TouchableOpacity onPress = { () => navigate('DayView',{Date3})}>
                 <Text style={styles.style2}>
                   {this.state.date3}
                 </Text>
@@ -353,7 +391,7 @@ export default class App extends Component {
               </TouchableOpacity>
             </View>: null}
             {this.state.testDate !='WED'?<View style= {styles.dateFrame}>
-              <TouchableOpacity>
+              <TouchableOpacity onPress = { () => navigate('DayView',{Date3})}>
                 <Text style={styles.style2}>
                   {this.state.date3}
                 </Text>
@@ -364,7 +402,7 @@ export default class App extends Component {
             </View>: null}
 
             {this.state.testDate =='THU'?<View style= {styles.dateFrame2}>
-              <TouchableOpacity>
+              <TouchableOpacity onPress = { () => navigate('DayView',{Date4})}>
                 <Text style={styles.style2}>
                   {this.state.date4}
                 </Text>
@@ -373,7 +411,7 @@ export default class App extends Component {
             </View> : null}
 
             {this.state.testDate !='THU'?<View style= {styles.dateFrame}>
-              <TouchableOpacity>
+              <TouchableOpacity onPress = { () => navigate('DayView',{Date4})}>
                 <Text style={styles.style2}>
                   {this.state.date4}
                 </Text>
@@ -383,7 +421,7 @@ export default class App extends Component {
 
 
             {this.state.testDate =='FRI'?<View style= {styles.dateFrame2}>
-              <TouchableOpacity>
+              <TouchableOpacity onPress = { () => navigate('DayView',{Date5})}>
                 <Text style={styles.style2}>
                   {this.state.date5}
                 </Text>
@@ -394,7 +432,7 @@ export default class App extends Component {
             </View> : null}
 
             {this.state.testDate !='FRI'?<View style= {styles.dateFrame}>
-              <TouchableOpacity>
+              <TouchableOpacity onPress = { () => navigate('DayView',{Date5})}>
                 <Text style={styles.style2}>
                   {this.state.date5}
                 </Text>
@@ -405,7 +443,7 @@ export default class App extends Component {
             </View>: null}
 
             {this.state.testDate =='SAT'?<View style= {styles.dateFrame2}>
-              <TouchableOpacity>
+              <TouchableOpacity onPress = { () => navigate('DayView',{Date6})}>
                 <Text style={styles.style2}>
                   {this.state.date6}
                 </Text>
@@ -416,7 +454,7 @@ export default class App extends Component {
             </View>: null}
 
             {this.state.testDate !='SAT'?<View style= {styles.dateFrame}>
-              <TouchableOpacity>
+              <TouchableOpacity onPress = { () => navigate('DayView',{Date6})}>
                 <Text style={styles.style2}>
                   {this.state.date6}
                 </Text>
@@ -427,7 +465,7 @@ export default class App extends Component {
             </View>: null}
 
             {this.state.testDate =='SUN'?<View style= {styles.dateFrame2}>
-              <TouchableOpacity>
+              <TouchableOpacity onPress = { () => navigate('DayView',{Date7})}>
                 <Text style={styles.style2}>
                   {this.state.date7}
                 </Text>
@@ -438,7 +476,7 @@ export default class App extends Component {
             </View>: null}    
 
             {this.state.testDate !='SUN'?<View style= {styles.dateFrame}>
-              <TouchableOpacity>
+              <TouchableOpacity onPress = { () => navigate('DayView',{Date7})}>
                 <Text style={styles.style2}>
                   {this.state.date7}
                 </Text>
@@ -459,9 +497,12 @@ export default class App extends Component {
         <View style = {styles.taskStyle}>
 
           <View style= {styles.container}>
-          <View style = { styles.item }>
+          
+          <View style = { styles.item } >
           
           <FlatList
+          style = {styles.listTask}
+          scrollEnabled={this.state.scrollEnabled}
           data={this.state.AllActivities}
           renderItem={({item}) => 
           <TouchableOpacity onPress={() => this.openModal(item)}>
@@ -479,7 +520,10 @@ export default class App extends Component {
           
           // extraData={this.state.selectedItem}
           keyExtractor={({id}, index) => id}
-          />
+          scrollEnabled={true}
+          > 
+          </FlatList>
+          
           </View>
           
               {/* {
@@ -527,7 +571,7 @@ export default class App extends Component {
             </View>
 
             <View style = {styles.popupStyle}>
-              <Button style = {{ margin: 5}} onPress = { () => navigate('Edit') }>
+              <Button style = {{ margin: 5}} onPress = { () => navigate('EditTask') }>
                 <Text> Edit </Text>
               </Button>
             </View>
@@ -539,6 +583,8 @@ export default class App extends Component {
             </View>
           </Modal>
         </View>
+
+        <Text> {Date1} </Text>
 
       <View style = { styles.blank}></View>
 
@@ -585,6 +631,12 @@ export default class App extends Component {
 
 
 
+        </View>
+
+        <View>
+          <Text>
+            {}
+          </Text>
         </View>
 
         <Button onPress = { () => navigate('Postpone')}>  Day End </Button>
@@ -768,6 +820,9 @@ const styles = StyleSheet.create({
    borderWidth: 1,
    borderColor: '#FF00CC',
 
+ },
+ listTask: {
+   height: 200
  }
 });
 

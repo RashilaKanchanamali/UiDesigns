@@ -4,29 +4,23 @@ import HeadingText from '../UI/components/HeadingText/HeadingText';
 import Button from '../UI/components/Button/Button';
 
 class AuthScreen extends Component {
-
     static navigationOptions={ 
         header:null,
         tabBarVisible:false 
     }
-
     constructor(props) {
         super(props);
         this.navigate=this.props.navigation.navigate;
-
         this.state = {
             token: '',
             UserName: '',
             Password: ''
         }    
     }
-
     componentWillMount() {
         this.fetchData();
       }
-     
-    fetchData = async () => {
-        
+    fetchData () {
     const { navigate } = this.props.navigation;
         fetch('http://192.168.2.23:100/integration/login/getToken', {
             method: 'POST',
@@ -39,39 +33,30 @@ class AuthScreen extends Component {
                 Password: this.state.Password
             })
         })
-        
         .then(response => response.json())
         .then(( responseJson ) => {
-            
             this.setState ({
                 token: responseJson
             })
-
             if (this.state.token.status === "Success" ) {
                 console.log("abcd");
                 var Token =  this.state.token.token
                 this.props.navigation.navigate('DashBoard', { TokenDashBoard:Token});
-            }    
-        }) 
+            }   
+        });
+        //  Alert.alert('Please enter valid Username and Password') 
 }
-
     renderButton() {
         return (
             <Button onPress={this.fetchData.bind(this)}>
             LOGIN
           </Button>
         );
-  
-      }
-    
-
+    }
     render () {
-        
-
         headingText1= (
             <HeadingText style={styles.textHeading}>One JIT</HeadingText>
         );
-
         return (
             <View style={styles.container}>
                 {headingText1}
@@ -81,40 +66,27 @@ class AuthScreen extends Component {
                                 <TextInput
                                 placeholder="Username"
                                 onChangeText={UserName => this.setState({ UserName})}
-                                //blurOnSubmit={true}
-                                style={styles.input}
-                                />
+                                style={styles.input}/>
                             </View>
                             <View>
                                 <TextInput
                                 placeholder="Password"
                                 onChangeText={Password => this.setState({ Password})}
-                                //blurOnSubmit={true}
-                                style={styles.input}
-                                />
-                                
+                                style={styles.input}/> 
                             </View>
-
-
                             <View style={styles.buttonContainer}>
-                                
-                            <View>
-                                {this.renderButton()}
-                            </View>
-                            
-                               
+                                <View>
+                                    {this.renderButton()}
+                                </View>
                             </View>
                             <View style={styles.wordContainer}>
-                
-                            <Text>Developed By Techsys</Text>
+                                <Text>Developed By Techsys</Text>
                             </View>
                     </View>
-                   
             </View>
         );
     }
 }
-
 export default AuthScreen;
 
 const styles = StyleSheet.create({
@@ -126,7 +98,6 @@ const styles = StyleSheet.create({
         paddingBottom: 20
     },
     container2: {
-        // flex: 2,
         paddingTop: 20,
         backgroundColor: "#fff",
         borderRadius: 20,

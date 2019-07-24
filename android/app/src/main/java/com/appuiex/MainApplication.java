@@ -1,7 +1,6 @@
 package com.appuiex;
 
 import android.app.Application;
-
 import com.facebook.react.ReactApplication;
 import com.swmansion.gesturehandler.react.RNGestureHandlerPackage;
 import com.facebook.react.ReactNativeHost;
@@ -27,6 +26,7 @@ public class MainApplication extends Application implements ReactApplication {
           new MainReactPackage(),
             new RNGestureHandlerPackage(),
             new VectorIconsPackage()
+        
       );
     }
 

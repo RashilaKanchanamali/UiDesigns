@@ -1,11 +1,12 @@
 import React, {Component} from 'react';
-import {createStackNavigator, createAppContainer, createDrawerNavigator} from 'react-navigation';
+import {createStackNavigator, createAppContainer} from 'react-navigation';
 import Auth from './src/screen/Auth';
 import DashBoard from './src/screen/DashBoard';
 import Done from './src/screen/Done';
 import Postpone from './src/screen/Postpone';
 import TimeSheet from './src/screen/TimeSheet';
-import Edit from './src/screen/Edit';
+import EditTask from './src/screen/EditTask';
+import DayView from './src/screen/DayView';
 
 const MainNavigator = createStackNavigator({
   Auth: {screen: Auth},
@@ -13,7 +14,8 @@ const MainNavigator = createStackNavigator({
   TimeSheet: {screen: TimeSheet},
   Done: {screen: Done},
   Postpone: {screen: Postpone},
-  Edit: {screen: Edit}
+  EditTask: {screen: EditTask},
+  DayView: {screen: DayView}
 
 });
 

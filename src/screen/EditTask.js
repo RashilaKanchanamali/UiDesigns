@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import { View, Image, StyleSheet, Text, TouchableOpacity } from 'react-native';
+import moment from 'moment';
 
-class Edit extends Component {
+class EditTask extends Component {
 
     static navigationOptions={ 
         // header:null,
@@ -13,15 +14,17 @@ class Edit extends Component {
     }
 
 render () {
+
+
     return (
       <View style = { styles.container }>
-          <Text>Edit</Text>
+          <Text>  edit </Text>
       </View>  
     )
 }
 }
 
-export default Edit;
+export default EditTask;
 
 const styles = StyleSheet.create({
     container: {

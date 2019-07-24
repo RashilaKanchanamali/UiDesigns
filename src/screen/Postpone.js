@@ -3,6 +3,7 @@ import {Platform, StyleSheet, Text, View} from 'react-native';
 import { TextInput } from 'react-native-gesture-handler';
 import Button from '../UI/components/Button/Button';
 import DatePicker from 'react-native-datepicker'
+import moment from 'moment';
 
 export class Postpone extends Component {
 
@@ -39,14 +40,14 @@ export class Postpone extends Component {
 
           <View style = {styles.textTime}>
           <View style = {styles.textContainer}>
-            <TextInput style={styles.text1}> {TimeFrom} </TextInput>
+            <TextInput style={styles.text1}> {moment(this.params.SelectTimeFrom).format('HH:mm')} </TextInput>
           </View>
           
           <View style = {styles.textContainer}>
             <Text>-</Text>
           </View>
           <View style = {styles.textContainer}>
-            <TextInput style={styles.text1}> {TimeTo} </TextInput>
+            <TextInput style={styles.text1}> {moment(this.params.SelectTimeTo).format('HH:mm')} </TextInput>
           </View>
         </View>
 
@@ -121,13 +122,13 @@ const styles = StyleSheet.create({
   },
   text1: {
     fontSize: 16,
-    borderWidth: 1,
-    // borderRadius: 3,
-    borderColor: '#000000',
-    // width: 150,
+    color: '#000000',
+    borderRadius: 3,
     height: 40,
-    paddingLeft: 10,
-    paddingRight: 10
+    backgroundColor: '#e6e6fa',
+    fontWeight: 'bold'
+    
+    
   },
   text2: {
     fontSize: 16,
