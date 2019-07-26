@@ -450,7 +450,7 @@ export default class App extends Component {
                         <CheckBox 
                         value={this.state.checked}
                         onValueChange={() => this.setState({ checked: !this.state.checked })}/>
-                        {item.isDelayed == true?<Text style = { styles.text2 }>{item.description} - {moment(item.date).format('DD/MM/YYYY')}</Text> : null}
+                        {item.isDelayed == true?<Text style = { styles.text2 }>{item.description} - {moment(item.date).format('YYYY-MM-DD')}</Text> : null}
                         {item.isDelayed == false?<Text style = { styles.text } >{item.description} - {moment(item.timeFrom).format('HH:mm')}</Text> : null}
                         <View style = { styles.separator }/> 
                       </View>

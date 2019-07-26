@@ -41,7 +41,7 @@ render() {
       <View style={styles.container}>
         <View>
           <Text style = {styles.textStyle}>
-            {this.state.user.id}
+            {this.state.user.firstName}
           </Text>
         </View>
         <View style = {styles.pageView}>
@@ -99,7 +99,7 @@ const styles = StyleSheet.create({
     alignSelf: 'flex-end',
     paddingRight: 20,
     fontSize: 16,
-    color: '#483d8b'
+    color: '#000000'
   },
   pageView: {
     flex: 1,
