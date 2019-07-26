@@ -13,7 +13,8 @@ constructor(props) {
   super(props);
   this.params = this.props.navigation.state.params,
   this.state = {
-    userItems: ''
+    userItems: '',
+    note: ''
   };
   this.calendar = null;
 }
@@ -28,7 +29,8 @@ onButtonPress (){
           activityID: this.params.SelectId,
           timeFrom: this.params.SelectTimeFrom,
           timeTo: this.params.SelectTimeTo,
-          isDone: true
+          isDone: true,
+          note: this.state.note,
         })
     })
       .then(response => response.json())
@@ -81,8 +83,11 @@ render() {
       <View style = {styles.textContainer1}>
         <TextInput 
           style = { styles.noteStyle }
-          multiline={true}/>
+          multiline={true}
+          onChangeText={note => this.setState({ note})}
+          />
       </View>
+      <Text> {this.state.note} </Text>
       <View style = {styles.textContainer}>
       {this.renderButton()}
       </View>
