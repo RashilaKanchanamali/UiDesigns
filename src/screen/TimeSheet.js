@@ -5,7 +5,9 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import Modal from "react-native-simple-modal";
 import moment from 'moment';
 import styles2 from './WeekView.styles';
+import CalendarStrip from 'react-native-slideable-calendar-strip';
 
+const width = Dimensions.get('window').width;
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 const TIME_LABELS_COUNT = 48;
 
@@ -43,19 +45,11 @@ export default class App extends Component {
     super(props);
     this.params = this.props.navigation.state.params;
     this.state = {
-      //default value of the date time
+      selectedDate: new Date(),
       AllActivities:[],
       toDayActivity:[],
       delayedActivities:[],
-      date1: '',
-      date2: '',
-      date3: '',
-      date4: '',
-      date5: '',
-      date6: '',
-      date7: '',
       i:'',
-      testDate:'',
       selectedDescription:'',
       selectCode: '',
       selectTimeFrom: '',
@@ -67,104 +61,6 @@ export default class App extends Component {
     };
     this.calendar = null;
     this.times = this.generateTimes();
-  }
-  componentDidMount() {
-    var that = this;
-    requestAnimationFrame(() => {
-      this.calendar.scrollTo({ y: 0, x: 2 * (SCREEN_WIDTH - 60), animated: false });
-    });
-
-    Date.prototype.addDays = function(days) {
-      this.setDate(this.getDate() + parseInt(days));
-      return this;
-      };
-
-      var toDayActivities = new Date();
-      var mon ,tue,wed,thu,fri,sat,sun
-      var TokenTimeSheetInternal =  this.params.TokenTimeSheet
-      var TestDate = new Date(toDayActivities).getDay();
-
-      if(TestDate ==1){
-        TestDate='MON'
-        mon = toDayActivities;
-        tue = new Date().addDays(1);
-        wed = new Date().addDays(2);
-        thu = new Date().addDays(3);
-        fri = new Date().addDays(4);
-        sat = new Date().addDays(5);
-        sun = new Date().addDays(6);
-      }
-      else if(TestDate ==2){
-        TestDate='TUE'
-        mon = new Date().addDays(-1);
-        tue = toDayActivities;
-        wed = new Date().addDays(1);
-        thu = new Date().addDays(2);
-        fri = new Date().addDays(3);
-        sat = new Date().addDays(4);
-        sun = new Date().addDays(5);
-      }
-      else if(TestDate ==3){
-        TestDate='WED'
-        mon = new Date().addDays(-2);
-        tue = new Date().addDays(-1);
-        wed = toDayActivities;
-        thu = new Date().addDays(1);
-        fri = new Date().addDays(2);
-        sat = new Date().addDays(3);
-        sun = new Date().addDays(4);
-      }
-      else if(TestDate ==4){
-        TestDate='THU';
-        mon = new Date().addDays(-3);
-        tue = new Date().addDays(-2);
-        wed = new Date().addDays(-1);
-        thu = toDayActivities;
-        fri = new Date().addDays(1);
-        sat = new Date().addDays(2);
-        sun = new Date().addDays(3);
-      }
-      else if(TestDate ==5){
-        TestDate='FRI';
-        mon = new Date().addDays(-4);
-        tue = new Date().addDays(-3);
-        wed = new Date().addDays(-2);
-        thu = new Date().addDays(-1);
-        fri = toDayActivities;
-        sat = new Date().addDays(1);
-        sun = new Date().addDays(2);
-      }
-      else if(TestDate ==6){
-        TestDate='SAT';
-        mon = new Date().addDays(-5);
-        tue = new Date().addDays(-4);
-        wed = new Date().addDays(-3);
-        thu = new Date().addDays(-2);
-        fri = new Date().addDays(-1);
-        sat = toDayActivities;
-        sun = new Date().addDays(1);
-      }
-      else if(TestDate ==0){
-        TestDate='SUN';
-        mon = new Date().addDays(-6);
-        tue = new Date().addDays(-5);
-        wed = new Date().addDays(-4);
-        thu = new Date().addDays(-3);
-        fri = new Date().addDays(-2);
-        sat = new Date().addDays(-1);
-        sun = toDayActivities;
-      }
-      
-    that.setState({
-      date1 : mon.getDate(),
-      date2 : tue.getDate(),
-      date3 : wed.getDate(),
-      date4 : thu.getDate(),
-      date5 : fri.getDate(),
-      date6 : sat.getDate(),
-      date7 : sun.getDate(),
-      testDate:TestDate
-    });
   }
 
   scrollViewRef = (ref) => {
@@ -264,14 +160,6 @@ export default class App extends Component {
       var SelectIsDone = this.state.selectIsDone
       var SelectDate = this.state.selectDate
       var TokenTimeSheetInternal =  this.params.TokenTimeSheet
-
-      var Date1 = this.state.date1
-      var Date2 = this.state.date2 
-      var Date3 = this.state.date3 
-      var Date4 = this.state.date4 
-      var Date5 = this.state.date5
-      var Date6 = this.state.date6 
-      var Date7 = this.state.date7 
       
     // how to view token import from previous page
     const { navigate } = this.props.navigation;
@@ -281,164 +169,29 @@ export default class App extends Component {
     return (
       <View style = {styles.fullView}>
         <ScrollView>
-          <Icon style={styles.iconStyle} name="ios-notifications" size = {30}/>
-            <View style = {styles.calenderStyle}>
-              <View style={styles.style1}>
+          {/* <Icon style={styles.iconStyle} name="ios-notifications" size = {30}/> */}
 
-                {this.state.testDate =='MON'?<View style= {styles.dateFrame2}>
-                    <TouchableOpacity style= {styles.dateFrame1} onPress = { () => navigate('TimeSheet',{Date1})}>
-                      <Text style={styles.style2}>
-                        {this.state.date1}
-                      </Text>
-                      <Text style={styles.style3}>{'MON'}</Text>
-                    </TouchableOpacity>
-                  </View>: null}
-
-                {this.state.testDate !='MON'?<View style= {styles.dateFrame}>
-                    <TouchableOpacity style= {styles.dateFrame1} onPress = { () => navigate('TimeSheet',{Date1})}>
-                      <Text style={styles.style2}>
-                        {this.state.date1}
-                      </Text>
-                      <Text style={styles.style3}>{'MON'}</Text>
-                    </TouchableOpacity>
-                  </View>: null}
-
-                {this.state.testDate =='TUE'?<View style= {styles.dateFrame2}>
-                  <TouchableOpacity onPress = { () => navigate('DayView',{Date2})}>
-                    <Text style={styles.style2}>
-                      {this.state.date2}
-                    </Text>
-                    <Text style={styles.style3}>
-                      {'TUE'}
-                      </Text>
-                  </TouchableOpacity>
-                </View>: null}
-
-                {this.state.testDate !='TUE'?<View style= {styles.dateFrame}>
-                <TouchableOpacity onPress = { () => navigate('DayView',{Date2})}>
-                  <Text style={styles.style2}>
-                    {this.state.date2}
-                  </Text>
-                  <Text style={styles.style3}>
-                    {'TUE'}
-                    </Text>
-                </TouchableOpacity>
-              </View>: null}
-
-              {this.state.testDate =='WED'?<View style= {styles.dateFrame2}>
-                <TouchableOpacity onPress = { () => navigate('DayView',{Date3})}>
-                  <Text style={styles.style2}>
-                    {this.state.date3}
-                  </Text>
-                  <Text style={styles.style3}>
-                    {'WED'}
-                    </Text>
-                </TouchableOpacity>
-              </View>: null}
-
-              {this.state.testDate !='WED'?<View style= {styles.dateFrame}>
-                <TouchableOpacity onPress = { () => navigate('DayView',{Date3})}>
-                  <Text style={styles.style2}>
-                    {this.state.date3}
-                  </Text>
-                  <Text style={styles.style3}>
-                    {'WED'}
-                    </Text>
-                </TouchableOpacity>
-              </View>: null}
-
-              {this.state.testDate =='THU'?<View style= {styles.dateFrame2}>
-                <TouchableOpacity onPress = { () => navigate('DayView',{Date4})}>
-                  <Text style={styles.style2}>
-                    {this.state.date4}
-                  </Text>
-                  <Text style={styles.style3}>{'THU'}</Text>
-                </TouchableOpacity>
-              </View> : null}
-
-              {this.state.testDate !='THU'?<View style= {styles.dateFrame}>
-                <TouchableOpacity onPress = { () => navigate('DayView',{Date4})}>
-                  <Text style={styles.style2}>
-                    {this.state.date4}
-                  </Text>
-                  <Text style={styles.style3}>{'THU'}</Text>
-                </TouchableOpacity>
-              </View> : null}
-
-              {this.state.testDate =='FRI'?<View style= {styles.dateFrame2}>
-                <TouchableOpacity onPress = { () => navigate('DayView',{Date5})}>
-                  <Text style={styles.style2}>
-                    {this.state.date5}
-                  </Text>
-                  <Text style={styles.style3}>
-                    {'FRI'}
-                    </Text>
-                </TouchableOpacity>
-              </View> : null}
-
-              {this.state.testDate !='FRI'?<View style= {styles.dateFrame}>
-                <TouchableOpacity onPress = { () => navigate('DayView',{Date5})}>
-                  <Text style={styles.style2}>
-                    {this.state.date5}
-                  </Text>
-                  <Text style={styles.style3}>
-                    {'FRI'}
-                    </Text>
-                </TouchableOpacity>
-              </View>: null}
-
-              {this.state.testDate =='SAT'?<View style= {styles.dateFrame2}>
-                <TouchableOpacity onPress = { () => navigate('DayView',{Date6})}>
-                  <Text style={styles.style2}>
-                    {this.state.date6}
-                  </Text>
-                  <Text style={styles.style4}>
-                    {'SAT'}
-                    </Text>
-                </TouchableOpacity>
-              </View>: null}
-
-              {this.state.testDate !='SAT'?<View style= {styles.dateFrame}>
-                <TouchableOpacity onPress = { () => navigate('DayView',{Date6})}>
-                  <Text style={styles.style2}>
-                    {this.state.date6}
-                  </Text>
-                  <Text style={styles.style4}>
-                    {'SAT'}
-                    </Text>
-                </TouchableOpacity>
-              </View>: null}
-
-              {this.state.testDate =='SUN'?<View style= {styles.dateFrame2}>
-                <TouchableOpacity onPress = { () => navigate('DayView',{Date7})}>
-                  <Text style={styles.style2}>
-                    {this.state.date7}
-                  </Text>
-                  <Text style={styles.style5}>
-                    {'SUN'}
-                    </Text>
-                </TouchableOpacity>
-              </View>: null}    
-
-              {this.state.testDate !='SUN'?<View style= {styles.dateFrame}>
-                <TouchableOpacity onPress = { () => navigate('DayView',{Date7})}>
-                  <Text style={styles.style2}>
-                    {this.state.date7}
-                  </Text>
-                  <Text style={styles.style5}>
-                    {'SUN'}
-                    </Text>
-                </TouchableOpacity>
-              </View>: null}
-            </View>
+          <View style={styles.container1}>
+            <CalendarStrip
+              selectedDate={this.state.selectedDate}
+              onPressDate={(date) => {
+                this.setState({ selectedDate: date });
+              }}
+              onPressGoToday={(today) => {
+                this.setState({ selectedDate: today });
+              }}
+              onSwipeDown={() => {
+                alert('onSwipeDown');
+              }}
+              markedDate={['']}
+            />
           </View>
-
           <Text style = {styles.TextStyle}>
               {'\n'}Tasks{'\n'}
           </Text>
 
           <View style = {styles.taskStyle}>
-            <View style= {styles.container}>
+            <View style= {styles.container2}>
               <View style = { styles.item } >
                 <FlatList
                   style = {styles.listTask}
@@ -530,7 +283,12 @@ export default class App extends Component {
 }
 
 const styles = StyleSheet.create({
-  container:
+  container1: {
+    flex: 1,
+    paddingTop: 20,
+    backgroundColor: '#fff',
+  },
+  container2:
   {
     flex: 1,
     width: SCREEN_WIDTH - 2
@@ -568,118 +326,37 @@ const styles = StyleSheet.create({
     width: '100%',
     justifyContent: 'center'
   },
-  style1: {
-    // paddingLeft: 70,
-    flexDirection: 'row',
-    height: 50,
-    justifyContent: 'center'
-  },
-  style2: {
-    fontSize: 15,
-    marginTop: 8,
-    width: 40,
-    paddingLeft: 15
-  },
-  style3: {
-    fontSize: 12,
-    color: '#2196f3',
-    paddingLeft: 8
-  },
-  style4: {
-    fontSize: 12,
-    color: '#606970',
-    paddingLeft: 8
-  },
-  style5: {
-    fontSize: 12,
-    color: '#f08080',
-    paddingLeft: 8
-  },
-  dateFrame: {
-    borderWidth: 1,
-    borderColor: "#000000",
-    borderRadius: 6,
-    backgroundColor: '#cfcab0'
-    
-    },
-    dateFrame2: {
-    borderWidth: 1,
-    borderColor: "#f3d321",
-    borderRadius: 6,
-    backgroundColor: '#f3d321'
-    },
-  dateFrame1: {
-    justifyContent: 'center'
-  },
   TextStyle: {
     fontSize: 18,
     color: '#000000',
     paddingLeft: 20
   },
-  textViewStyle: {
-    justifyContent: 'center',
-    borderWidth: 1,
-    borderColor: 'black',
-    height: 60,
-    width: 350,
-    fontWeight: 'bold',
-  },
-  textStyle1: {
-    
-  },
-  TimeSheet: {
-    height: 20,
-    width: 275,
-    borderWidth: 1,
-    borderColor: 'black'
-  },
-  TimeSheetStyle: {
-    flexDirection: 'row',
-    padding: 3
-  },
-
   iconStyle: {
     alignSelf: 'flex-end',
     paddingRight: 10
- },
- popupStyle: {
-   alignItems: 'center'
- },
- popupModelStyle: {
-   borderWidth: 1,
-   borderColor: 'red'
- },
- modelStyle: {
-   backgroundColor: 'black'
- },
- fullView: {
-   backgroundColor: '#dcdcdc'
- },
- timeSheetStyle: {
-  borderWidth: 1,
-  borderColor: '#1A237E',
-  backgroundColor: '#B2EBF2',
-  borderRadius:5
- },
- blank: {
-   height: 30
- },
- taskStyle: {
-  justifyContent: 'center',
-  alignItems: 'center'
- },
- calenderStyle: {
-  height: 80,
-  justifyContent: 'center',
-  alignItems: 'center'
- },
- descriptionTime: {
-   borderWidth: 1,
-   borderColor: '#FF00CC',
- },
- listTask: {
-   height: 200
- }
+},
+  popupStyle: {
+    alignItems: 'center'
+  },
+  modelStyle: {
+    backgroundColor: 'black'
+  },
+  fullView: {
+    backgroundColor: '#dcdcdc'
+  },
+  timeSheetStyle: {
+    borderWidth: 1,
+    borderColor: '#1A237E',
+    backgroundColor: '#B2EBF2',
+    borderRadius:5
+  },
+  blank: {
+    height: 30
+  },
+  taskStyle: {
+    justifyContent: 'center',
+    alignItems: 'center'
+  }
 });
 
 AppRegistry.registerComponent('App', () => App);
