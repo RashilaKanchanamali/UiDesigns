@@ -1,12 +1,15 @@
 import React, { Component } from 'react';
 import { View, Image, StyleSheet, Text, Alert } from 'react-native';
-import { TouchableOpacity } from 'react-native-gesture-handler';
+import { TouchableOpacity, TextInput } from 'react-native-gesture-handler';
 
 class DashBoard extends Component {
   static navigationOptions={ 
     // header:null,
     tabBarVisible:true ,
-    title: 'DashBoard'
+    title: 'DashBoard',
+    headerStyle: {
+      backgroundColor: '#A9CCE3',
+    },
 }
 constructor(props){
   super(props);
@@ -31,7 +34,7 @@ fetchData () {
         this.setState({
           user: responseJson
         })
-        // Alert.alert(JSON.stringify(responseJson.userName));
+        Alert.alert(JSON.stringify(responseJson));
       })   
 }
 render() {
@@ -39,9 +42,10 @@ render() {
   var TokenTimeSheet= this.params.TokenDashBoard;
     return ( 
       <View style={styles.container}>
+      {/* <Image source={require('../UI/components/Image/background.png')}  style={styles.backgroundImage}></Image> */}
         <View>
           <Text style = {styles.textStyle}>
-            {this.state.user.firstName}
+            {this.state.user.userName}
           </Text>
         </View>
         <View style = {styles.pageView}>
@@ -99,7 +103,10 @@ const styles = StyleSheet.create({
     alignSelf: 'flex-end',
     paddingRight: 20,
     fontSize: 16,
-    color: '#000000'
+    color: '#000000',
+    // backgroundColor: 'white',
+    // borderWidth:1,
+    // borderColor: 'red'
   },
   pageView: {
     flex: 1,
@@ -130,5 +137,9 @@ const styles = StyleSheet.create({
       // borderColor: 'green',
       textAlign: 'center',
       color: '#000000'
-  }
+  },
+  // backgroundImage: {
+  //   flex: 1,
+  //   resizeMode: 'cover',
+  // }
 })

@@ -1,7 +1,8 @@
 import React, {Component} from 'react';
-import {StyleSheet, Text, View, TextInput, Alert} from 'react-native';
+import {StyleSheet, Text, View, TextInput, Alert, KeyboardAvoidingView} from 'react-native';
 import Button from '../UI/components/Button/Button';
 import moment from 'moment';
+import TimePicker from "react-native-24h-timepicker";
 
 export class Done extends Component {
 static navigationOptions={ 
@@ -14,10 +15,22 @@ constructor(props) {
   this.params = this.props.navigation.state.params,
   this.state = {
     userItems: '',
-    note: ''
+    note: '',
+    time: '',
+    scrollEnabled: true,
   };
   this.calendar = null;
 }
+
+onCancel() {
+  this.TimePicker.close();
+}
+
+onConfirm(hour, minute) {
+  this.setState({ time: `${hour}:${minute}` });
+  this.TimePicker.close();
+}
+
 onButtonPress (){
   fetch('http://192.168.2.23:100/integration/timeEntry/saveTimeEntry', {
         method: 'POST',
@@ -26,11 +39,14 @@ onButtonPress (){
             'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          activityID: this.params.SelectId,
+          ActivityID: this.params.SelectId,
+          EmployeeID: this.params.EmployeeID,
+          Date : this.params.SelectDate,
           timeFrom: this.params.SelectTimeFrom,
           timeTo: this.params.SelectTimeTo,
-          isDone: true,
-          note: this.state.note,
+          ActivityType: this.params.ActivityType,
+          Description: this.params.SelectedDescription,
+          Note: this.state.note,
         })
     })
       .then(response => response.json())
@@ -38,7 +54,7 @@ onButtonPress (){
         this.setState ({
           userItems:responseJson
         })
-      Alert.alert(JSON.stringify(responseJson));
+      Alert.alert(this.params.SelectedDescription +' Added to Time Sheet');
     }).catch((error) => {
         Alert.alert(error);
     });
@@ -61,7 +77,8 @@ render() {
   var Token = this.params.TokenTimeSheetInternal
   const { navigate } = this.props.navigation;
   return (
-    <View style={styles.container}>
+    <KeyboardAvoidingView behavior="padding" style={styles.container}>
+    
       <View style = {styles.textContainer}>
         <Text style={styles.text1}> Code : {Code} </Text>
       </View>
@@ -85,13 +102,15 @@ render() {
           style = { styles.noteStyle }
           multiline={true}
           onChangeText={note => this.setState({ note})}
+          scrollEnabled={this.state.scrollEnabled}
           />
       </View>
-      <Text> {this.state.note} </Text>
+      {/* <Text> {this.state.note} </Text> */}
       <View style = {styles.textContainer}>
       {this.renderButton()}
       </View>
-    </View>
+     
+    </KeyboardAvoidingView>
     );
   }
 }
@@ -128,7 +147,9 @@ const styles = StyleSheet.create({
   noteStyle: {
     backgroundColor: '#e6e6fa',
     borderRadius: 5,
-    alignSelf: 'flex-start'
+    alignSelf: 'flex-start',
+    height: 150,
+
   },
   textContainer1: {
     alignSelf: 'flex-start',
@@ -137,4 +158,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: '#000000'
   },
+  // keyboardStyle: {
+  //   behavior: 'position'
+  // }
 });

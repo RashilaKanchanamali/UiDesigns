@@ -1,10 +1,11 @@
 import { StyleSheet } from 'react-native';
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    // flex: 1,
   },
   scrollViewContent: {
-    flexDirection: 'row',
+    flexDirection: 'column',
+    // height:200
   },
   header: {
     height: 50,
@@ -12,17 +13,18 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   timeLabel: {
-    flex: -1,
+    // flex: -1,
     height: 40,
   },
   timeText: {
     fontSize: 12,
-    textAlign: 'center',
+    textAlign: 'left',
     fontWeight: 'bold',
+    paddingLeft: 10
   },
   timeColumn: {
     paddingTop: 10,
-    width: 60,
+    width: '100%',
   },
 });
 

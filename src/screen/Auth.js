@@ -58,7 +58,7 @@ class AuthScreen extends Component {
             <HeadingText style={styles.textHeading}>One JIT</HeadingText>
         );
         return (
-            <View style={styles.container}>
+            <KeyboardAvoidingView style={styles.container}>
                 {headingText1}
                     <View style={styles.container2}>
                         <Text style={styles.textSignIn}>Sign In</Text>
@@ -72,7 +72,9 @@ class AuthScreen extends Component {
                                 <TextInput
                                 placeholder="Password"
                                 onChangeText={Password => this.setState({ Password})}
-                                style={styles.input}/> 
+                                style={styles.input}
+                                secureTextEntry
+                                /> 
                             </View>
                             <View style={styles.buttonContainer}>
                                 <View>
@@ -83,7 +85,7 @@ class AuthScreen extends Component {
                                 <Text>Developed By Techsys</Text>
                             </View>
                     </View>
-            </View>
+            </KeyboardAvoidingView>
         );
     }
 }

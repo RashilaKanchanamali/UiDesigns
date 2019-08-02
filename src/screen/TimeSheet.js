@@ -9,6 +9,7 @@ import CalendarStrip from 'react-native-slideable-calendar-strip';
 
 const width = Dimensions.get('window').width;
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
+const { height: SCREEN_HEIGHT } = Dimensions.get('screen');
 const TIME_LABELS_COUNT = 48;
 
 export default class App extends Component {
@@ -26,21 +27,27 @@ export default class App extends Component {
   openModal = (rowItem) => this.setState({ 
              open: true ,
              selectedDescription: rowItem.description,
+             employeeID : rowItem.assigneeID,
+             activityType: rowItem.activityType,
              selectCode: rowItem.code,
              selectTimeFrom: rowItem.timeFrom,
              selectTimeTo: rowItem.timeTo,
              selectId: rowItem.id,
              selectIsDone: rowItem.isDone,
-             selectDate: rowItem.date
+             selectDate: rowItem.date,
             });
 
   closeModal = () => this.setState({ open: false });
   
   static navigationOptions={ 
-    // header:null,
+    // // header:null,
     tabBarVisible:true ,
-    title: 'Time Entry Sheet'
+    title: 'Time Entry Sheet',
+    headerStyle: {
+      backgroundColor: '#A9CCE3',
+    },
   }
+
   constructor(props) {
     super(props);
     this.params = this.props.navigation.state.params;
@@ -51,13 +58,18 @@ export default class App extends Component {
       delayedActivities:[],
       i:'',
       selectedDescription:'',
+      employeeID:'',
+      activityType:'',
       selectCode: '',
       selectTimeFrom: '',
       selectTimeTo: '',
       selectId: '',
       selectIsDone: '',
+      selectedDescription:'',
       selectDate: '',
-      checked: false
+      checked: false,
+      selectedDateFromCalandar:'',
+      todayDate:''
     };
     this.calendar = null;
     this.times = this.generateTimes();
@@ -76,9 +88,9 @@ export default class App extends Component {
     return dates;
   };
   
-  componentDidUpdate() {
-    this.calendar.scrollTo({ y: 0, x: 2 * (SCREEN_WIDTH - 60), animated: false });
-  }
+  // componentDidUpdate() {
+  //   this.calendar.scrollTo({ y: 0, x: 2 * (SCREEN_WIDTH - 60), animated: false });
+  // }
 
   generateTimes = () => {
     const times = [];
@@ -113,8 +125,39 @@ export default class App extends Component {
     });
   };
 
+  getActivtiesByDate = (date) =>{
+    if(date != null){
+      var Caldate = date.getDate()
+      var CalMonth = date.getMonth() + 1
+      var CalYear = date.getFullYear()
+      var CalFullDate = CalYear +'-'+ CalMonth +'-'+ Caldate
+
+      var API = 'http://192.168.2.23:100/integration/activity/getActivities?date='
+
+    fetch ( API+ CalFullDate , {
+        method: 'GET',
+        headers: {
+            'Authorization': 'Bearer ' + this.params.TokenTimeSheet,
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        }
+    })
+    .then((response) => response.json())
+      .then((responseJson) => {
+          
+          let ToTestarray = [];
+          for (i = 0 ; i < responseJson.activityList.length ; i = i + 1)
+          {
+            ToTestarray.push(responseJson.activityList[i]);
+          }
+          this.setState({AllActivities : ToTestarray})
+        })
+    }
+  }
+
   componentWillMount() {
     this.fetchData();
+    //this.getActivtiesByDate();
   }
 
   fetchData = async () => {
@@ -124,6 +167,8 @@ export default class App extends Component {
     var month = new Date().getMonth() + 1
     var year = new Date().getFullYear()
     var today = year+'-'+month+'-'+day
+
+    this.setState({todayDate : today})
 
     fetch ( API+ today , {
         method: 'GET',
@@ -152,10 +197,12 @@ export default class App extends Component {
       onEventPress,
       events,
     } = this.props;
-      var SelectedDescription= this.state.selectedDescription
-      var SelectCode= this.state.selectCode
-      var SelectTimeFrom= this.state.selectTimeFrom
-      var SelectTimeTo= this.state.selectTimeTo
+      var SelectedDescription = this.state.selectedDescription
+      var SelectCode = this.state.selectCode
+      var EmployeeID = this.state.employeeID
+      var ActivityType = this.state.activityType
+      var SelectTimeFrom = this.state.selectTimeFrom
+      var SelectTimeTo = this.state.selectTimeTo
       var SelectId = this.state.selectId
       var SelectIsDone = this.state.selectIsDone
       var SelectDate = this.state.selectDate
@@ -168,14 +215,15 @@ export default class App extends Component {
     const dates = this.prepareDates(currentMoment, numberOfDays);
     return (
       <View style = {styles.fullView}>
-        <ScrollView>
-          {/* <Icon style={styles.iconStyle} name="ios-notifications" size = {30}/> */}
 
+      <ScrollView>
+          {/* <Icon style={styles.iconStyle} name="ios-notifications" size = {30}/> */}
           <View style={styles.container1}>
             <CalendarStrip
               selectedDate={this.state.selectedDate}
               onPressDate={(date) => {
                 this.setState({ selectedDate: date });
+                this.getActivtiesByDate(date)
               }}
               onPressGoToday={(today) => {
                 this.setState({ selectedDate: today });
@@ -183,28 +231,30 @@ export default class App extends Component {
               onSwipeDown={() => {
                 alert('onSwipeDown');
               }}
-              markedDate={['']}
+              showWeekNumber
+              
+              markedDate={[this.state.todayDate]}
             />
           </View>
-          <Text style = {styles.TextStyle}>
-              {'\n'}Tasks{'\n'}
-          </Text>
-
+          <View style = { styles.blank}></View>
+          <Text style = {styles.TextStyle}>Tasks</Text>
+          <View style = { styles.blank}></View>
           <View style = {styles.taskStyle}>
             <View style= {styles.container2}>
-              <View style = { styles.item } >
+              <View style = { styles.item } 
+              scrollEnabled={this.state.scrollEnabled}>
                 <FlatList
                   style = {styles.listTask}
                   scrollEnabled={this.state.scrollEnabled}
                   data={this.state.AllActivities}
                   renderItem={({item}) => 
                     <TouchableOpacity onPress={() => this.openModal(item)}>
-                      <View style={{ flexDirection: 'row' }}>
-                        <CheckBox 
+                      <View style={{ flexDirection: 'row' }}
+        
                         value={this.state.checked}
-                        onValueChange={() => this.setState({ checked: !this.state.checked })}/>
-                        {item.isDelayed == true?<Text style = { styles.text2 }>{item.description} - {moment(item.date).format('YYYY-MM-DD')}</Text> : null}
-                        {item.isDelayed == false?<Text style = { styles.text } >{item.description} - {moment(item.timeFrom).format('HH:mm')}</Text> : null}
+                        onValueChange={() => this.setState({ checked: !this.state.checked })}>
+                        {item.isDelayed == true?<Text style = { styles.text2 }>{item.description} : {moment(item.date).format('YYYY-MM-DD')} / {moment(item.timeFrom).format('HH:mm')}</Text> : null}
+                        {item.isDelayed == false?<Text style = { styles.text } >{item.description} : {moment(item.date).format('YYYY-MM-DD')} / {moment(item.timeFrom).format('HH:mm')}</Text> : null}
                         <View style = { styles.separator }/> 
                       </View>
                     </TouchableOpacity>
@@ -221,7 +271,7 @@ export default class App extends Component {
               modalDidOpen={this.modalDidOpen}
               modalDidClose={this.modalDidClose}>
               <View style = {styles.popupStyle}>
-                <Button style = {{ margin: 5}} onPress = { () => navigate('Done',{SelectedDescription, SelectCode, SelectTimeFrom, SelectTimeTo, SelectId, SelectIsDone, TokenTimeSheetInternal}) }>
+                <Button style = {{ margin: 5}} onPress = { () => navigate('Done',{SelectedDescription, SelectCode,SelectDate, SelectTimeFrom, SelectTimeTo, SelectId, SelectIsDone, EmployeeID, ActivityType, TokenTimeSheetInternal}) }>
                   <Text> Done </Text>
                 </Button>
               </View>
@@ -247,9 +297,13 @@ export default class App extends Component {
           </View>
 
       <View style = { styles.blank}></View>
-      <Text style = {styles.TextStyle}>{'\n'}Time Sheet{'\n'}</Text>
+      <Text style = {styles.TextStyle}>Time Sheet</Text>
+      <View style = { styles.blank}></View>
+
+      <View style = {styles.TimeSheetContainer}>
       <View style = { styles.timeSheetStyle}>
-        <ScrollView>
+
+        
           <View style={styles2.scrollViewContent}>
             <View style={styles2.timeColumn}>
               {this.times.map(time => (
@@ -258,7 +312,7 @@ export default class App extends Component {
                 </View>
               ))}
             </View>
-            <ScrollView
+            <FlatList
               horizontal
               pagingEnabled
               automaticallyAdjustContentInsets={false}
@@ -270,13 +324,12 @@ export default class App extends Component {
                   style={{ flex: 1, width: SCREEN_WIDTH - 60 }}>
                 </View>
               ))}
-            </ScrollView>
+            </FlatList>
           </View>
-        </ScrollView>
+        
       </View>
-
-        <Button onPress = { () => navigate('Postpone')}>  Day End </Button>
-        </ScrollView>
+      </View>
+      </ScrollView>
       </View>
     );
   }
@@ -284,19 +337,20 @@ export default class App extends Component {
 
 const styles = StyleSheet.create({
   container1: {
-    flex: 1,
-    paddingTop: 20,
+    // flex: 1,
+    paddingTop: 10,
     backgroundColor: '#fff',
   },
   container2:
   {
-    flex: 1,
+    // flex: 1,
     width: SCREEN_WIDTH - 2
   },
   item: {
     borderWidth: 1,
     borderRadius: 5,
-    width: SCREEN_WIDTH - 5
+    width: SCREEN_WIDTH - 5,
+    height:200
   },
   separator:
   {
@@ -312,7 +366,7 @@ const styles = StyleSheet.create({
     padding: 5,
     borderWidth: 1,
     borderColor: 'black',
-    backgroundColor: '#74e368',
+    backgroundColor: '#27AE60',
     justifyContent: 'center',
     width: '100%'
   },
@@ -321,13 +375,15 @@ const styles = StyleSheet.create({
     fontSize: 15,
     color: 'black',
     padding: 5,
-    backgroundColor: '#ef3939',
-    borderColor: 'black',
-    width: '100%',
-    justifyContent: 'center'
+    backgroundColor: '#E74C3C',
+    // borderColor: 'black',
+    width: SCREEN_WIDTH - 5,
+    justifyContent: 'center',
+    borderWidth: 1,
+    borderRadius: 5
   },
   TextStyle: {
-    fontSize: 18,
+    fontSize: 16,
     color: '#000000',
     paddingLeft: 20
   },
@@ -342,20 +398,28 @@ const styles = StyleSheet.create({
     backgroundColor: 'black'
   },
   fullView: {
-    backgroundColor: '#dcdcdc'
+    // backgroundColor: '#dcdcdc'
   },
   timeSheetStyle: {
     borderWidth: 1,
     borderColor: '#1A237E',
     backgroundColor: '#B2EBF2',
-    borderRadius:5
+    borderRadius:5,
+    // height: SCREEN_HEIGHT/4
   },
   blank: {
-    height: 30
+    height: 6
   },
   taskStyle: {
     justifyContent: 'center',
     alignItems: 'center'
+  },
+  TimeSheetContainer: {
+    // alignSelf: 'flex-start',
+    position: 'relative',
+    // bottom: 0,
+    // left:0,
+    // right:0
   }
 });
 
