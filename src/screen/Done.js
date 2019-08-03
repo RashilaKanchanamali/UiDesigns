@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Platform, StyleSheet, Text, View, TextInput, ScrollView} from 'react-native';
+import {Platform, StyleSheet, Text, View, TextInput, ScrollView, KeyboardAvoidingView} from 'react-native';
 import Button from '../UI/components/Button/Button';
 export class Done extends Component {
 
@@ -32,7 +32,7 @@ constructor(props) {
     const { navigate } = this.props.navigation;
 
     return (
-      <View style={styles.container}>
+      <KeyboardAvoidingView behavior="padding" enabled style={styles.container}>
         <View style = {styles.textContainer}>
           <Text style={styles.text1}> {Code} </Text>
         </View>
@@ -64,7 +64,7 @@ constructor(props) {
            Add to Time Sheet
           </Button>
         </View>
-      </View>
+      </KeyboardAvoidingView>
     );
   }
 }
