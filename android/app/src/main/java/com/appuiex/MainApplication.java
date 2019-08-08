@@ -8,6 +8,7 @@ import com.facebook.react.ReactPackage;
 import com.facebook.react.shell.MainReactPackage;
 import com.facebook.soloader.SoLoader;
 import com.oblador.vectoricons.VectorIconsPackage;
+// import com.reactcommunity.rndatetimepicker.RNDateTimePickerPackage;
 
 import java.util.Arrays;
 import java.util.List;
@@ -26,6 +27,7 @@ public class MainApplication extends Application implements ReactApplication {
           new MainReactPackage(),
             new RNGestureHandlerPackage(),
             new VectorIconsPackage()
+            // new RNDateTimePickerPackage()
         
       );
     }

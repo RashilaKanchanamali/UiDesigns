@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { StyleSheet, View ,FlatList, Text, ScrollView,AppRegistry, TouchableOpacity,Dimensions, CheckBox} from 'react-native';
+import { StyleSheet, View ,FlatList, Text, ScrollView,AppRegistry, TouchableOpacity,Dimensions, CheckBox,Alert} from 'react-native';
 import Button from '../UI/components/Button/Button';
 import Icon from 'react-native-vector-icons/Ionicons';
 import Modal from "react-native-simple-modal";
@@ -12,7 +12,7 @@ const { width: SCREEN_WIDTH } = Dimensions.get('window');
 const { height: SCREEN_HEIGHT } = Dimensions.get('screen');
 const TIME_LABELS_COUNT = 48;
 
-export default class App extends Component {
+export default class TimeSheet extends Component {
   state = { 
     open: false,
     scrollEnabled: true,
@@ -36,6 +36,36 @@ export default class App extends Component {
              selectIsDone: rowItem.isDone,
              selectDate: rowItem.date,
             });
+
+  openTimeSheet = (rowItem) => { 
+              
+            var ActivityCategory = '';
+            if(rowItem.activityType == 1){
+              ActivityCategory = 'Metting';
+            }
+            else if(rowItem.activityType ==2){
+              ActivityCategory = 'Call';
+            }
+            else if(rowItem.activityType ==3){
+              ActivityCategory = 'Email';
+            }
+            else if(rowItem.activityType == 4){
+              ActivityCategory = 'Networking';
+            }
+            else if(rowItem.activityType == 5){
+              ActivityCategory = 'Other';
+            }
+
+             Alert.alert(
+              'Time Entry Details',
+              'Activity Type : '+ActivityCategory+'\n'+'\n'+'Time : '+moment(rowItem.timeFrom).format('HH:mm') +' To '+moment(rowItem.timeTo).format('HH:mm') +'\n'+'\n'+'Description : '+rowItem.description,
+              [
+                {text: 'OK', onPress: () => console.log('OK Pressed')},
+              ],
+              {cancelable: true},
+            );
+             
+             };
 
   closeModal = () => this.setState({ open: false });
   
@@ -69,7 +99,8 @@ export default class App extends Component {
       selectDate: '',
       checked: false,
       selectedDateFromCalandar:'',
-      todayDate:''
+      todayDate:'',
+      Duration:''
     };
     this.calendar = null;
     this.times = this.generateTimes();
@@ -87,11 +118,7 @@ export default class App extends Component {
     }
     return dates;
   };
-  
-  // componentDidUpdate() {
-  //   this.calendar.scrollTo({ y: 0, x: 2 * (SCREEN_WIDTH - 60), animated: false });
-  // }
-
+ 
   generateTimes = () => {
     const times = [];
     for (let i = 0; i < TIME_LABELS_COUNT; i += 1) {
@@ -144,8 +171,14 @@ export default class App extends Component {
     })
     .then((response) => response.json())
       .then((responseJson) => {
-          
           let ToTestarray = [];
+
+          if(responseJson.message != null)
+            {
+              ToTestarray.push(responseJson.message)
+              this.setState({AllActivities : ToTestarray})
+            }          
+          
           for (i = 0 ; i < responseJson.activityList.length ; i = i + 1)
           {
             ToTestarray.push(responseJson.activityList[i]);
@@ -155,11 +188,77 @@ export default class App extends Component {
     }
   }
 
-  componentWillMount() {
-    this.fetchData();
-    //this.getActivtiesByDate();
+  getTimeSheetByDate = (date) =>{
+    if(date != null){
+      var Caldate = date.getDate()
+      var CalMonth = date.getMonth() + 1
+      var CalYear = date.getFullYear()
+      var CalFullDate = CalYear +'-'+ CalMonth +'-'+ Caldate
+    }
+
+      var API = 'http://192.168.2.23:100/integration/timeEntry/getActivitiesForTimeSheet?date='
+
+    fetch ( API+ CalFullDate , {
+        method: 'GET',
+        headers: {
+            'Authorization': 'Bearer ' + this.params.TokenTimeSheet,
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        }
+    })
+    .then((response) => response.json())
+      .then((responseJson) => {
+          
+          let timeSheetarray = [];
+          let duration =0;
+          let hours = 0;
+          let minutes = 0;
+          if(responseJson.message != null)
+          {
+            timeSheetarray.push(responseJson.message)
+            this.setState({TimeSheetarray : timeSheetarray})
+          }
+          for (i = 0 ; i < responseJson.timeSheetList.length ; i = i + 1)
+          {
+            
+              timeSheetarray.push(responseJson.timeSheetList[i]);
+
+               var end = responseJson.timeSheetList[i].timeTo;
+               var start = responseJson.timeSheetList[i].timeFrom;
+              
+
+              duration = moment(end,"YYYY-MM-DD HH:mm:ss").diff(moment(start,"YYYY-MM-DD HH:mm:ss"));
+              var d = moment.duration(duration);
+              var s = Math.floor(d.asHours()) + moment.utc(duration).format(":mm:ss");
+              hours = d.asHours() + hours;
+              minutes = (d.asMinutes() + minutes)%60;
+
+            
+          }
+          var workTime =hours+':'+minutes
+
+          this.setState({Duration : workTime})
+          this.setState({TimeSheetarray : timeSheetarray})
+        })
+    
   }
 
+  componentWillMount() {
+    this.fetchData();
+    this.getTimeSheetByDate(new Date());
+
+    this.willFocusSubscription = this.props.navigation.addListener(
+      'willFocus',
+      () => {
+        this.fetchData();
+        this.getTimeSheetByDate(new Date());
+        this.closeModal();
+      }
+    );
+  }
+  componentWillUnmount() {
+    this.willFocusSubscription.remove();
+  }
   fetchData = async () => {
 
     var API = 'http://192.168.2.23:100/integration/activity/getActivities?date='
@@ -182,6 +281,11 @@ export default class App extends Component {
       .then((responseJson) => {
           
           let ToTestarray = [];
+          if(responseJson.message != null)
+          {
+            ToTestarray.push(responseJson.message)
+            this.setState({AllActivities : ToTestarray})
+          }
           for (i = 0 ; i < responseJson.activityList.length ; i = i + 1)
           {
             ToTestarray.push(responseJson.activityList[i]);
@@ -217,16 +321,18 @@ export default class App extends Component {
       <View style = {styles.fullView}>
 
       <ScrollView>
-          {/* <Icon style={styles.iconStyle} name="ios-notifications" size = {30}/> */}
           <View style={styles.container1}>
             <CalendarStrip
               selectedDate={this.state.selectedDate}
               onPressDate={(date) => {
                 this.setState({ selectedDate: date });
-                this.getActivtiesByDate(date)
+                this.getActivtiesByDate(date);
+                this.getTimeSheetByDate(date);
               }}
               onPressGoToday={(today) => {
                 this.setState({ selectedDate: today });
+                this.getActivtiesByDate(today);
+                this.getTimeSheetByDate(today);
               }}
               onSwipeDown={() => {
                 alert('onSwipeDown');
@@ -237,7 +343,7 @@ export default class App extends Component {
             />
           </View>
           <View style = { styles.blank}></View>
-          <Text style = {styles.TextStyle}>Tasks</Text>
+          <Text style = {styles.header}>Tasks</Text>
           <View style = { styles.blank}></View>
           <View style = {styles.taskStyle}>
             <View style= {styles.container2}>
@@ -253,8 +359,9 @@ export default class App extends Component {
         
                         value={this.state.checked}
                         onValueChange={() => this.setState({ checked: !this.state.checked })}>
-                        {item.isDelayed == true?<Text style = { styles.text2 }>{item.description} : {moment(item.date).format('YYYY-MM-DD')} / {moment(item.timeFrom).format('HH:mm')}</Text> : null}
-                        {item.isDelayed == false?<Text style = { styles.text } >{item.description} : {moment(item.date).format('YYYY-MM-DD')} / {moment(item.timeFrom).format('HH:mm')}</Text> : null}
+                        {item == 'No Activies found'?<Text style = { styles.text3  } onPress={() => this.closeModal()}>No Activties Found</Text> : null}
+                        {item.isDelayed == true && item != 'No Activies found'?  <Text style = { styles.text2 }>{item.description} : {moment(item.date).format('YYYY-MM-DD')} / {moment(item.timeFrom).format('HH:mm')}</Text> : null}
+                        {item.isDelayed == false && item != 'No Activies found'?<Text style = { styles.text } >{item.description} : {moment(item.date).format('YYYY-MM-DD')} / {moment(item.timeFrom).format('HH:mm')}</Text> : null}
                         <View style = { styles.separator }/> 
                       </View>
                     </TouchableOpacity>
@@ -277,7 +384,7 @@ export default class App extends Component {
               </View>
 
               <View style = {styles.popupStyle}>
-                <Button style = {{ margin: 5}} onPress = { () => navigate('Postpone', {SelectCode, SelectTimeFrom, SelectTimeTo, TokenTimeSheetInternal}) }>
+                <Button style = {{ margin: 5}} onPress = { () => navigate('Postpone', {SelectCode, SelectTimeFrom, SelectTimeTo, SelectedDescription, SelectId, SelectDate, TokenTimeSheetInternal}) }>
                   <Text> Postpone </Text>
                 </Button>
               </View>
@@ -297,40 +404,43 @@ export default class App extends Component {
           </View>
 
       <View style = { styles.blank}></View>
-      <Text style = {styles.TextStyle}>Time Sheet</Text>
+      <Text style = {styles.header}>Time Entry
+      <Text style = {styles.empty}>__________ </Text>                                             
+      <Text style = {styles.TimeEntryheader}>No. Of Work Hour: {this.state.Duration}</Text>
+      </Text>
+      
       <View style = { styles.blank}></View>
 
       <View style = {styles.TimeSheetContainer}>
-      <View style = { styles.timeSheetStyle}>
-
-        
+        <View style = { styles.timeSheetStyle}>
           <View style={styles2.scrollViewContent}>
-            <View style={styles2.timeColumn}>
-              {this.times.map(time => (
-                <View key={time} style={styles2.timeLabel}>
-                  <Text style={styles2.timeText}>{time}</Text>
-                </View>
-              ))}
-            </View>
+            <View >
             <FlatList
-              horizontal
-              pagingEnabled
-              automaticallyAdjustContentInsets={false}
-              onMomentumScrollEnd={this.scrollEnded}
-              ref={this.scrollViewRef}>
-              {dates.map(date => (
-                <View
-                  key={date}
-                  style={{ flex: 1, width: SCREEN_WIDTH - 60 }}>
-                </View>
-              ))}
-            </FlatList>
+                  style = {styles.listTask}
+                  scrollEnabled={this.state.scrollEnabled}
+                  data={this.state.TimeSheetarray}
+                  renderItem={({item}) => 
+                     <TouchableOpacity onPress={() => this.openTimeSheet(item)}>
+                      <View closeModal
+                        value={this.state.checked}
+                        onValueChange={() => this.setState({ checked: !this.state.checked })}>
+                        {/* <Text >{item.activityType}{'\n'}</Text> */}
+                        {item == "No Time Sheet found"?<Text style = { styles.timeSheetStyle2 } onPress={() => this.closeModal()}>Time Sheet Not Available</Text> : null}
+                        {item != "No Time Sheet found"?<Text style = { styles.timeSheetTextStyle }>{moment(item.timeFrom).format('HH:mm')} {item.TimeFromType}: {moment(item.timeTo).format('HH:mm')}{'\n'}</Text>: null}
+                        {item != "No Time Sheet found"?<Text style = { styles.timeSheetTextStyle }>{item.description} </Text>: null}
+                        <View style = { styles2.separator }/> 
+                      </View>
+                     </TouchableOpacity>
+                  }
+                  keyExtractor={({id}, index) => id}
+                  scrollEnabled={true}> 
+                </FlatList>
+            </View>
           </View>
-        
+        </View>
       </View>
-      </View>
-      </ScrollView>
-      </View>
+    </ScrollView>
+  </View>
     );
   }
 }
@@ -355,7 +465,7 @@ const styles = StyleSheet.create({
   separator:
   {
     height: 2,
-    backgroundColor: 'rgba(255,255,0,0.3)',
+    backgroundColor: 'black',
     width: '100%'
   },
   text:
@@ -382,9 +492,21 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: 5
   },
+  text3:
+  {
+    fontSize: 15,
+    color: 'black',
+    padding: 5,
+    width: SCREEN_WIDTH - 5,
+    justifyContent: 'center',
+    borderWidth: 1,
+    borderRadius: 5,
+    backgroundColor: '#F39C12',
+    color: 'black',
+  },
   TextStyle: {
     fontSize: 16,
-    color: '#000000',
+    color: 'black',
     paddingLeft: 20
   },
   iconStyle: {
@@ -401,14 +523,31 @@ const styles = StyleSheet.create({
     // backgroundColor: '#dcdcdc'
   },
   timeSheetStyle: {
-    borderWidth: 1,
-    borderColor: '#1A237E',
+    // borderWidth: 1,
+    // borderColor: 'black',
     backgroundColor: '#B2EBF2',
-    borderRadius:5,
+    // borderRadius:4,
     // height: SCREEN_HEIGHT/4
   },
+  timeSheetStyle2: {
+    // borderWidth: 0.5,
+    paddingBottom: 7,
+    // borderColor: '#F39C12',
+    backgroundColor: '#F39C12',
+    // borderRadius: 5,
+    height: 28,
+    fontSize: 15,
+    color: 'black',
+  },
+  timeSheetTextStyle: {
+    fontSize: 15,
+    color: 'black',
+    paddingLeft:5,
+    paddingTop:2,
+    paddingBottom:2
+  },
   blank: {
-    height: 6
+    height: 15
   },
   taskStyle: {
     justifyContent: 'center',
@@ -420,7 +559,30 @@ const styles = StyleSheet.create({
     // bottom: 0,
     // left:0,
     // right:0
+  },
+  header: {
+    height: 30,
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#A9CCE3',
+    color: 'black',
+    fontSize: 20,
+    paddingLeft:10,
+  },
+  TimeEntryheader: {
+    height: 30,
+    flexDirection: 'row',
+    // justifyContent: 'center',
+    // alignItems: 'center',
+    backgroundColor: '#A9CCE3',
+    color: '#2471A3',
+    fontSize: 12,
+    paddingLeft:20
+  },
+  empty:{
+    color:'#A9CCE3' 
   }
 });
 
-AppRegistry.registerComponent('App', () => App);
+AppRegistry.registerComponent('TimeSheet', () => TimeSheet);

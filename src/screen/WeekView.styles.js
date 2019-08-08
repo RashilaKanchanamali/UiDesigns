@@ -1,5 +1,5 @@
 import { StyleSheet } from 'react-native';
-const styles = StyleSheet.create({
+const styles2 = StyleSheet.create({
   container: {
     // flex: 1,
   },
@@ -26,6 +26,12 @@ const styles = StyleSheet.create({
     paddingTop: 10,
     width: '100%',
   },
+  separator:
+  {
+    height: 2,
+    backgroundColor: 'black',
+    width: '100%'
+  }
 });
 
-export default styles;
+export default styles2;

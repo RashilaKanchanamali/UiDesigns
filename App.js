@@ -6,7 +6,6 @@ import Done from './src/screen/Done';
 import Postpone from './src/screen/Postpone';
 import TimeSheet from './src/screen/TimeSheet';
 import EditTask from './src/screen/EditTask';
-import DayView from './src/screen/DayView';
 
 const MainNavigator = createStackNavigator({
   Auth: {screen: Auth},
@@ -14,8 +13,7 @@ const MainNavigator = createStackNavigator({
   TimeSheet: {screen: TimeSheet},
   Done: {screen: Done},
   Postpone: {screen: Postpone},
-  EditTask: {screen: EditTask},
-  DayView: {screen: DayView}
+  EditTask: {screen: EditTask}
 
 });
 

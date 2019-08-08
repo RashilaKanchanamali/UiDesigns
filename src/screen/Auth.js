@@ -1,7 +1,10 @@
 import React, { Component } from 'react';
-import { View, Text, Platform, StyleSheet, TextInput, KeyboardAvoidingView, Alert } from 'react-native';
+import { View, Text, Platform, StyleSheet, TextInput, KeyboardAvoidingView, Alert, ImageBackground, Dimensions } from 'react-native';
 import HeadingText from '../UI/components/HeadingText/HeadingText';
 import Button from '../UI/components/Button/Button';
+import { Header } from 'react-navigation';
+
+const { width: SCREEN_WIDTH } = Dimensions.get('window');
 
 class AuthScreen extends Component {
     static navigationOptions={ 
@@ -58,7 +61,10 @@ class AuthScreen extends Component {
             <HeadingText style={styles.textHeading}>One JIT</HeadingText>
         );
         return (
-            <KeyboardAvoidingView style={styles.container}>
+            <KeyboardAvoidingView style={styles.container} keyboardVerticalOffset = {Header.HEIGHT + 20}>
+            {/* <ImageBackground source = {require ('../UI/components/Image/background.png')} style={styles.backgroundImage}> */}
+                
+                <View style={styles.container1}>
                 {headingText1}
                     <View style={styles.container2}>
                         <Text style={styles.textSignIn}>Sign In</Text>
@@ -82,9 +88,11 @@ class AuthScreen extends Component {
                                 </View>
                             </View>
                             <View style={styles.wordContainer}>
-                                <Text>Developed By Techsys</Text>
+                                <Text fontWeight= 'bold' color= 'black'>Developed By Techsys</Text>
                             </View>
                     </View>
+                    </View>
+                    {/* </ImageBackground> */}
             </KeyboardAvoidingView>
         );
     }
@@ -93,6 +101,11 @@ export default AuthScreen;
 
 const styles = StyleSheet.create({
     container: {
+        flex:1,
+        width: SCREEN_WIDTH
+       
+    },
+    container1: {
         flex:1,
         alignItems: "center",
         backgroundColor: "#778899",
@@ -126,5 +139,9 @@ const styles = StyleSheet.create({
     buttonContainer: {
         paddingTop: 30,
         paddingBottom: 70
-    }
+    },
+    // backgroundImage: {
+    //     flex: 1,
+    //     resizeMode: 'cover', // or 'stretch'
+    //   }
 })

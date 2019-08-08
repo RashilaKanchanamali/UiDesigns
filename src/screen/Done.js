@@ -1,14 +1,19 @@
 import React, {Component} from 'react';
-import {StyleSheet, Text, View, TextInput, Alert, KeyboardAvoidingView} from 'react-native';
+import {StyleSheet, Text, View, TextInput, Alert, KeyboardAvoidingView, Safe} from 'react-native';
 import Button from '../UI/components/Button/Button';
 import moment from 'moment';
-import TimePicker from "react-native-24h-timepicker";
+// import TimePicker from "react-native-24h-timepicker";
+import { Header } from 'react-navigation';
+// import DateTimePicker from '@react-native-community/datetimepicker';
 
 export class Done extends Component {
 static navigationOptions={ 
   // header:null,
   tabBarVisible:true ,
-  title: 'Done'
+  title: 'Done',
+  headerStyle: {
+    backgroundColor: '#A9CCE3',
+  },
 }
 constructor(props) {
   super(props);
@@ -77,7 +82,7 @@ render() {
   var Token = this.params.TokenTimeSheetInternal
   const { navigate } = this.props.navigation;
   return (
-    <KeyboardAvoidingView behavior="padding" style={styles.container}>
+    <KeyboardAvoidingView behavior="padding" style={styles.container} keyboardVerticalOffset = {Header.HEIGHT}>
     
       <View style = {styles.textContainer}>
         <Text style={styles.text1}> Code : {Code} </Text>
@@ -87,13 +92,15 @@ render() {
       </View>
       <View style = {styles.textTime}>
         <View style = {styles.textContainer}>
-          <TextInput style={styles.text1}> Time from :  {moment(this.params.SelectTimeFrom).format('HH:mm')}  </TextInput>
+          <Text style={styles.text1}> Time from </Text>
+          <TextInput style={styles.text2}>{moment(this.params.SelectTimeFrom).format('HH:mm')}  </TextInput>
         </View>
         <View style = {styles.textContainer}>
           <Text>-</Text>
         </View>
         <View style = {styles.textContainer}>
-          <TextInput style={styles.text1}> Time to :   {moment(this.params.SelectTimeTo).format('HH:mm')} </TextInput>
+          <Text style={styles.text1}> Time to </Text>
+          <TextInput style={styles.text2}>{moment(this.params.SelectTimeTo).format('HH:mm')} </TextInput>
         </View>
       </View>
       <Text style={styles.textContainer}> Notes : {'\n'} </Text>
@@ -127,6 +134,14 @@ const styles = StyleSheet.create({
     color: '#000000',
     borderRadius: 3,
     height: 40,
+    // backgroundColor: '#e6e6fa',
+    fontWeight: 'bold' 
+  },
+  text2: {
+    fontSize: 16,
+    color: '#000000',
+    borderRadius: 3,
+    height: 40,
     backgroundColor: '#e6e6fa',
     fontWeight: 'bold' 
   },
@@ -148,7 +163,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#e6e6fa',
     borderRadius: 5,
     alignSelf: 'flex-start',
-    height: 150,
+    // height: 50,
 
   },
   textContainer1: {
