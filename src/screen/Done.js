@@ -1,10 +1,12 @@
 import React, {Component} from 'react';
-import {StyleSheet, Text, View, TextInput, Alert, KeyboardAvoidingView, Safe} from 'react-native';
+import {StyleSheet, Text, View, TextInput, Alert, KeyboardAvoidingView, Dimensions} from 'react-native';
 import Button from '../UI/components/Button/Button';
 import moment from 'moment';
 // import TimePicker from "react-native-24h-timepicker";
 import { Header } from 'react-navigation';
 // import DateTimePicker from '@react-native-community/datetimepicker';
+
+const { width: SCREEN_WIDTH } = Dimensions.get('window');
 
 export class Done extends Component {
 static navigationOptions={ 
@@ -23,6 +25,11 @@ constructor(props) {
     note: '',
     time: '',
     scrollEnabled: true,
+    Description : this.params.SelectedDescription,
+    Code : this.params.SelectCode,
+    TimeFrom : moment(this.params.SelectTimeFrom).format('HH:mm'),
+    TimeTo : moment(this.params.SelectTimeTo).format('HH:mm'),
+    Id : this.params.SelectId
   };
   this.calendar = null;
 }
@@ -73,34 +80,35 @@ renderButton() {
   );
 }
 render() {
-  var Description =  this.params.SelectedDescription
-  var Code = this.params.SelectCode
-  var TimeFrom = this.params.SelectTimeFrom
-  var TimeTo = this.params.SelectTimeTo
-  var Id = this.params.SelectId
-  var IsDone = this.params.SelectIsDone
+  
   var Token = this.params.TokenTimeSheetInternal
   const { navigate } = this.props.navigation;
   return (
     <KeyboardAvoidingView behavior="padding" style={styles.container} keyboardVerticalOffset = {Header.HEIGHT}>
     
       <View style = {styles.textContainer}>
-        <Text style={styles.text1}> Code : {Code} </Text>
+        <Text style={styles.text1}> Code : {this.params.SelectCode} </Text>
       </View>
       <View style = {styles.textContainer}>
-        <Text style={styles.text1}> Description :   {Description} </Text>
+        <Text style={styles.text1}> Description :   {this.params.SelectedDescription} </Text>
       </View>
       <View style = {styles.textTime}>
         <View style = {styles.textContainer}>
           <Text style={styles.text1}> Time from </Text>
-          <TextInput style={styles.text2}>{moment(this.params.SelectTimeFrom).format('HH:mm')}  </TextInput>
+          <TextInput 
+            style={styles.text2}
+            onChangeText={(TimeFrom) => this.setState({TimeFrom})}>{this.state.TimeFrom}  
+            </TextInput>
         </View>
         <View style = {styles.textContainer}>
           <Text>-</Text>
         </View>
         <View style = {styles.textContainer}>
           <Text style={styles.text1}> Time to </Text>
-          <TextInput style={styles.text2}>{moment(this.params.SelectTimeTo).format('HH:mm')} </TextInput>
+          <TextInput 
+          style={styles.text2}
+          onChangeText={(TimeTo) => this.setState({TimeTo})}>{this.state.TimeTo} 
+          </TextInput>
         </View>
       </View>
       <Text style={styles.textContainer}> Notes : {'\n'} </Text>
@@ -113,7 +121,7 @@ render() {
           />
       </View>
       {/* <Text> {this.state.note} </Text> */}
-      <View style = {styles.textContainer}>
+      <View style = {styles.textContainer2}>
       {this.renderButton()}
       </View>
      
@@ -155,6 +163,16 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: '#000000'
   },
+  textContainer2: {
+    alignSelf: 'center',
+    paddingLeft: 10,
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingTop: 10,
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: '#000000'
+  },
   textTime: {
     flexDirection: 'row',
     alignSelf: 'flex-start'
@@ -162,8 +180,10 @@ const styles = StyleSheet.create({
   noteStyle: {
     backgroundColor: '#e6e6fa',
     borderRadius: 5,
-    alignSelf: 'flex-start',
-    // height: 50,
+    textAlignVertical: 'top',
+    // alignSelf: 'flex-start',
+    height: 100,
+    width: SCREEN_WIDTH-20
 
   },
   textContainer1: {

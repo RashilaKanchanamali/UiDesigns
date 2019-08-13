@@ -79,7 +79,7 @@ fetchData = async () => {
                 </View>
 
                 <View style = {styles.imageView}>
-                    <TouchableOpacity>
+                    <TouchableOpacity onPress= { () => navigate('PushNotification', {TokenTimeSheet}) }>
                     <Image 
                         style={styles.ImageStyle}
                         source={require('../UI/components/Image/pettyCash.png')}

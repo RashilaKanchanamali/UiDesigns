@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Platform, StyleSheet, Text, View, KeyboardAvoidingView} from 'react-native';
+import {Platform, StyleSheet, Text, View, KeyboardAvoidingView,Alert} from 'react-native';
 import { TextInput } from 'react-native-gesture-handler';
 import Button from '../UI/components/Button/Button';
 import DatePicker from 'react-native-datepicker'
@@ -11,7 +11,13 @@ export class Postpone extends Component {
   constructor(props){
     super(props);
     this.params = this.props.navigation.state.params,
-    this.state = {date:this.params.SelectDate}
+    this.state = {
+      TimeFrom : moment(this.params.SelectTimeFrom).format('HH:mm'),
+      TimeTo : moment(this.params.SelectTimeTo).format('HH:mm'),
+      date:this.params.SelectDate,
+      Description :this.params.SelectedDescription
+
+    }
     
   }
 
@@ -33,12 +39,22 @@ onButtonPress () {
     },
     body: JSON.stringify({
       ID: this.params.SelectId,
-      Date : this.params.SelectDate,
-      TimeFrom: this.params.SelectTimeFrom,
-      TimeTo: this.params.SelectTimeTo,
-      Description: this.params.SelectedDescription
+      Date : this.state.date,
+      TimeFrom: this.state.TimeFrom,
+      TimeTo: this.state.TimeTo,
+      Description: this.state.Description
     })
+}).then(response => response.json())
+.then((responseJson) => {
+  if(responseJson.message != null)
+    {
+      Alert.alert('Activity Changed');
+    }
+    else{
+      Alert.alert('System Error!!!');
+    }
 })
+
 }
 
 renderButton () {
@@ -49,38 +65,42 @@ renderButton () {
 }
 
   render() {
-
-    var Code = this.params.SelectCode
-    var Id = this.params.SelectId
-    var Date = this.params.SelectDate
-    var Description = this.params.SelectedDescription
-    var TimeFrom = this.params.SelectTimeFrom
-    var TimeTo = this.params.SelectTimeTo
     var Token = this.params.TokenTimeSheetInternal
-
+    
     const { navigate } = this.props.navigation;
 
     return (
       <KeyboardAvoidingView behavior="padding" style={styles.container} keyboardVerticalOffset = {Header.HEIGHT}>
-        <Text style = {styles.topic}>Reason</Text>
           <View style = {styles.textContainer}>
-          <Text 
+        
+        <Text style = {styles.topic}>Description{'\n'}</Text>
+          <TextInput 
           multiline={true}
-          style={styles.text1}> {Code} </Text>
+          style={styles.text1}
+          onChangeText={(Description) => this.setState({Description})}> 
+          Description :   {this.params.SelectedDescription}
+          </TextInput>
           </View>
 
-          <View style = {styles.textTime}>
-          <View style = {styles.textContainer}>
-            <TextInput style={styles.text1}> {moment(TimeFrom).format('HH:mm')} </TextInput>
-          </View>
-          
-          <View style = {styles.textContainer}>
-            <Text>-</Text>
-          </View>
-          <View style = {styles.textContainer}>
-            <TextInput style={styles.text1}> {moment(TimeTo).format('HH:mm')} </TextInput>
-          </View>
+      <View style = {styles.textTime}>
+        <View style = {styles.textContainer}>
+          <Text style={styles.text1}> Time from </Text>
+          <TextInput 
+            style={styles.text2}
+            onChangeText={(TimeFrom) => this.setState({TimeFrom})}>{this.state.TimeFrom}  
+            </TextInput>
         </View>
+        <View style = {styles.textContainer}>
+          <Text>-</Text>
+        </View>
+        <View style = {styles.textContainer}>
+          <Text style={styles.text1}> Time to </Text>
+          <TextInput 
+          style={styles.text2}
+          onChangeText={(TimeTo) => this.setState({TimeTo})}>{this.state.TimeTo} 
+          </TextInput>
+        </View>
+      </View>
 
         
         <View style = {styles.textTime}>
@@ -116,7 +136,7 @@ renderButton () {
           </View>
         </View>
 
-        <View style = {styles.textContainer}>
+        <View style = {styles.textContainer1}>
         {this.renderButton()}
         </View>
 
@@ -142,6 +162,16 @@ const styles = StyleSheet.create({
   textContainer: {
     alignSelf: 'flex-start',
     paddingLeft: 10,
+    // justifyContent: 'center',
+    // alignItems: 'center',
+    paddingTop: 10,
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: '#000000'
+  },
+  textContainer1: {
+    alignSelf: 'center',
+    paddingLeft: 10,
     justifyContent: 'center',
     alignItems: 'center',
     paddingTop: 10,
@@ -152,7 +182,7 @@ const styles = StyleSheet.create({
   text1: {
     fontSize: 16,
     color: '#000000',
-    borderRadius: 3,
+    // borderRadius: 3,
     height: 40,
     backgroundColor: '#e6e6fa',
     fontWeight: 'bold'
@@ -161,13 +191,11 @@ const styles = StyleSheet.create({
   },
   text2: {
     fontSize: 16,
-    // borderWidth: 1,
-    // borderRadius: 3,
-    borderColor: '#000000',
-    // width: 150,
+    color: '#000000',
+    borderRadius: 3,
     height: 40,
-    paddingLeft: 10,
-    paddingRight: 10 
+    backgroundColor: '#e6e6fa',
+    fontWeight: 'bold'  
   },
   textTime: {
     flexDirection: 'row',

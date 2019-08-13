@@ -6,6 +6,7 @@ import Done from './src/screen/Done';
 import Postpone from './src/screen/Postpone';
 import TimeSheet from './src/screen/TimeSheet';
 import EditTask from './src/screen/EditTask';
+// import PushNotification from './src/screen/PushNotification';
 
 const MainNavigator = createStackNavigator({
   Auth: {screen: Auth},
@@ -13,7 +14,8 @@ const MainNavigator = createStackNavigator({
   TimeSheet: {screen: TimeSheet},
   Done: {screen: Done},
   Postpone: {screen: Postpone},
-  EditTask: {screen: EditTask}
+  EditTask: {screen: EditTask},
+  // PushNotification: { screen: PushNotification }
 
 });
 
