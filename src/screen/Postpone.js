@@ -32,27 +32,41 @@ export class Postpone extends Component {
 
 onButtonPress () {
   fetch ('https://onejit.jithpl.com/integration/activity/saveActivity', {
-    method: 'POST',
-    headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-      ID: this.params.SelectId,
-      Date : this.state.date,
-      TimeFrom: this.state.TimeFrom,
-      TimeTo: this.state.TimeTo,
-      Description: this.state.Description
-    })
+method: 'POST',
+headers: {
+'Accept': 'application/json',
+'Content-Type': 'application/json',
+},
+body: JSON.stringify({
+ID: this.params.SelectId,
+Date : this.state.date,
+TimeFrom: this.state.TimeFrom,
+TimeTo: this.state.TimeTo,
+Description: this.state.Description
+})
 }).then(response => response.json())
 .then((responseJson) => {
-  if(responseJson.message != null)
-    {
-      Alert.alert('Activity Changed');
-    }
-    else{
-      Alert.alert('System Error!!!');
-    }
+if(responseJson.message != null)
+{
+Alert.alert(
+'Message',
+'Activity Changed',
+[
+{text: 'OK', onPress: () => console.log('OK Pressed')},
+],
+{cancelable: true},
+);
+}
+else{
+Alert.alert(
+'Message',
+'System Error!!!',
+[
+{text: 'OK', onPress: () => console.log('OK Pressed')},
+],
+{cancelable: true},
+);
+}
 })
 
 }

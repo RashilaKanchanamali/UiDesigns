@@ -127,7 +127,7 @@ export default AuthScreen;
 const styles = StyleSheet.create({
     container: {
         flex:1,
-        width: SCREEN_WIDTH
+        width: SCREEN_WIDTH,
        
     },
     container1: {
@@ -165,6 +165,9 @@ const styles = StyleSheet.create({
         paddingTop: 30,
         paddingBottom: 70
     },
+    textHeading: {
+        paddingBottom: 30
+    }
     // backgroundImage: {
     //     flex: 1,
     //     resizeMode: 'cover', // or 'stretch'
