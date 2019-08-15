@@ -31,7 +31,7 @@ export class Postpone extends Component {
 }
 
 onButtonPress () {
-  fetch ('http://192.168.2.23:100/integration/activity/saveActivity', {
+  fetch ('https://onejit.jithpl.com/integration/activity/saveActivity', {
     method: 'POST',
     headers: {
         'Accept': 'application/json',
@@ -70,16 +70,19 @@ renderButton () {
     const { navigate } = this.props.navigation;
 
     return (
-      <KeyboardAvoidingView behavior="padding" style={styles.container} keyboardVerticalOffset = {Header.HEIGHT}>
+      <KeyboardAvoidingView behavior="padding" style={styles.container} keyboardVerticalOffset = {Header.HEIGHT + 50}>
           <View style = {styles.textContainer}>
         
-        <Text style = {styles.topic}>Description{'\n'}</Text>
+        {/* <Text style = {styles.topic}>Description{'\n'}</Text> */}
+        <View style ={styles.descriptionContainer} >
+        <Text style= {styles.text1} >Description:  </Text>
           <TextInput 
           multiline={true}
-          style={styles.text1}
+          style={styles.text2}
           onChangeText={(Description) => this.setState({Description})}> 
-          Description :   {this.params.SelectedDescription}
+          {this.params.SelectedDescription}
           </TextInput>
+        </View>
           </View>
 
       <View style = {styles.textTime}>
@@ -105,7 +108,7 @@ renderButton () {
         
         <View style = {styles.textTime}>
           <View style = {styles.textContainer}>
-            <Text style={styles.text2}>Other day</Text>
+            <Text style={styles.text3}>Other day</Text>
           </View>
         
           <View style = {styles.textContainer}>
@@ -184,7 +187,7 @@ const styles = StyleSheet.create({
     color: '#000000',
     // borderRadius: 3,
     height: 40,
-    backgroundColor: '#e6e6fa',
+    // backgroundColor: '#e6e6fa',
     fontWeight: 'bold'
     
     
@@ -195,10 +198,31 @@ const styles = StyleSheet.create({
     borderRadius: 3,
     height: 40,
     backgroundColor: '#e6e6fa',
+    // fontWeight: 'bold',
+    alignSelf: 'center'
+  },
+  text3: {
+    fontSize: 16,
+    color: '#000000',
+    // borderRadius: 3,
+    height: 40,
+    // backgroundColor: '#e6e6fa',
+    // fontWeight: 'bold',
+    alignSelf: 'center'
+  },
+  text: {
+    fontSize: 16,
+    color: '#000000',
+    borderRadius: 3,
+    height: 40,
+    backgroundColor: '#e6e6fa',
     fontWeight: 'bold'  
   },
   textTime: {
     flexDirection: 'row',
     alignSelf: 'flex-start'
+  },
+  descriptionContainer: {
+    flexDirection: 'row'
   }
 });

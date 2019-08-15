@@ -7,48 +7,7 @@ const { width: SCREEN_WIDTH } = Dimensions.get('window');
 const { height: SCREEN_HEIGHT } = Dimensions.get('window');
 
 class EditTask extends Component {
-  state ={
-    item: 'loading'
-  }
-
-  storeData = async () => {
-    try {
-      await AsyncStorage.setItem('mykey', 'cnq');
-      this.setState({
-        item: await AsyncStorage.getItem('mykey')
-      })
-
-    } catch (error)
-    {
-console.log(error);
-    }
-    console.log (this.state)
-  }
-
-  _retrieveData = async () => {
-    try {
-      const value = await AsyncStorage.getItem('tasks');
-      if ( value !== null) {
-        console.log (value)
-      }
-    }catch (error){
-console.log(error)
-    }
-  }
-
-  deleteData = async () => {
-    try {
-      AsyncStorage.removeItem('mykey', ()=> {
-        console.log("deleted")
-        this.setState({
-          // item: await AsyncStorage.getItem('mykey')
-        })
-      });
-      
-    }catch (error){
-
-    }
-  }
+  
 
     static navigationOptions={ 
         // header:null,
@@ -58,37 +17,41 @@ console.log(error)
           backgroundColor: '#A9CCE3',
         }
     }
+render () {
+  return(
+    <View>
+      <TouchableOpacity onPress={this.saveData} >
+        <Text>Click me to save data</Text>
+      </TouchableOpacity>
 
-    constructor() {
-        super();
-        this.state = {
-           
-        };
-      }
-
-    render () {
-
-
-    return (
-        <View style={styles.container}>
-        
-        <Text style = {styles.container2}>
-        abc
-
-        </Text>
-<Button
-onPress = {this.storeData}>store it</Button>
-
-        <Text>{this.state.item}</Text>
-
-        <Button
-onPress = {this.deleteData}>delete it</Button>
-
-      </View>
-    )
-}
+      <TouchableOpacity onPress={this.displayData}>
+        <Text>Click me to display data</Text>
+      </TouchableOpacity>
+    </View>
+  );
 }
 
+saveData(){
+  var obj = {
+    name: 'john doe',
+    email: 'test@gmail.com',
+    city: 'melborne'
+  }
+ 
+  AsyncStorage.setItem('user', JSON.stringify(obj));
+}
+displayData = async () => {
+  try {
+    var user = await AsyncStorage.getItem('user');
+    var parsed = JSON.parse(user);
+    alert(parsed.email);
+  }
+  catch(error){
+    alert(error);
+  }
+}
+  }
+    
 export default EditTask;
 
 const styles = StyleSheet.create({

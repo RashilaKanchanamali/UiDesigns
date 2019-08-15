@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, Platform, StyleSheet, TextInput, KeyboardAvoidingView, Alert, ImageBackground, Dimensions } from 'react-native';
+import { View, Text, Platform, StyleSheet, TextInput, KeyboardAvoidingView, Alert, ImageBackground, Dimensions, AsyncStorage } from 'react-native';
 import HeadingText from '../UI/components/HeadingText/HeadingText';
 import Button from '../UI/components/Button/Button';
 import { Header } from 'react-navigation';
@@ -17,15 +17,23 @@ class AuthScreen extends Component {
         this.state = {
             token: '',
             UserName: '',
-            Password: ''
+            Password: '',
+            userData: { }
         }    
     }
+
+    
     componentWillMount() {
         this.fetchData();
       }
+
+    componentDidMount() {
+        this.getToken();
+    }
+
     fetchData () {
     const { navigate } = this.props.navigation;
-        fetch('http://192.168.2.23:100/integration/login/getToken', {
+        fetch('https://onejit.jithpl.com/integration/login/getToken', {
             method: 'POST',
             headers: {
                 'Accept': 'application/json',
@@ -38,9 +46,8 @@ class AuthScreen extends Component {
         })
         .then(response => response.json())
         .then(( responseJson ) => {
-            this.setState ({
-                token: responseJson
-            })
+            this.setState ({token: responseJson});
+            this.storeToken({ userData: JSON.stringify(responseJson) })
             if (this.state.token.status === "Success" ) {
                 console.log("abcd");
                 var Token =  this.state.token.token
@@ -49,6 +56,24 @@ class AuthScreen extends Component {
         });
         //  Alert.alert('Please enter valid Username and Password') 
 }
+
+    async storeToken(user) {
+        try {
+            await AsyncStorage.setItem("userData", JSON.stringify(userData));
+        } catch (error) {
+            console.log("something went wrong")
+        }
+    }
+    async getToken(user) {
+        try {
+            var userData = await AsyncStorage.getItem("userData");
+            var data = JSON.parse(userData);
+        } catch (error) {
+            console.log("something wrong")
+        }
+    }
+
+
     renderButton() {
         return (
             <Button onPress={this.fetchData.bind(this)}>
@@ -61,7 +86,7 @@ class AuthScreen extends Component {
             <HeadingText style={styles.textHeading}>One JIT</HeadingText>
         );
         return (
-            <KeyboardAvoidingView style={styles.container} keyboardVerticalOffset = {Header.HEIGHT + 20}>
+            <KeyboardAvoidingView style={styles.container} keyboardVerticalOffset = {Header.HEIGHT + 50}>
             {/* <ImageBackground source = {require ('../UI/components/Image/background.png')} style={styles.backgroundImage}> */}
                 
                 <View style={styles.container1}>

@@ -44,7 +44,7 @@ onConfirm(hour, minute) {
 }
 
 onButtonPress (){
-  fetch('http://192.168.2.23:100/integration/timeEntry/saveTimeEntry', {
+  fetch('https://onejit.jithpl.com/integration/timeEntry/saveTimeEntry', {
         method: 'POST',
         headers: {
             'Accept': 'application/json',
@@ -84,7 +84,7 @@ render() {
   var Token = this.params.TokenTimeSheetInternal
   const { navigate } = this.props.navigation;
   return (
-    <KeyboardAvoidingView behavior="padding" style={styles.container} keyboardVerticalOffset = {Header.HEIGHT}>
+    <KeyboardAvoidingView behavior="padding" style={styles.container} keyboardVerticalOffset = {Header.HEIGHT + 50 }>
     
       <View style = {styles.textContainer}>
         <Text style={styles.text1}> Code : {this.params.SelectCode} </Text>
