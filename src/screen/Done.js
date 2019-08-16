@@ -84,50 +84,44 @@ render() {
   var Token = this.params.TokenTimeSheetInternal
   const { navigate } = this.props.navigation;
   return (
-    // <KeyboardAvoidingView behavior="padding" style={styles.container} keyboardVerticalOffset = {Header.HEIGHT + 50 }>
-    
-    //   <View style = {styles.textContainer}>
-    //     <Text style={styles.text1}> Code : {this.params.SelectCode} </Text>
-    //   </View>
-    //   <View style = {styles.textContainer}>
-    //     <Text style={styles.text1}> Description :   {this.params.SelectedDescription} </Text>
-    //   </View>
-    //   <View style = {styles.textTime}>
-    //     <View style = {styles.textContainer}>
-    //       <Text style={styles.text1}> Time from </Text>
-    //       <TextInput 
-    //         style={styles.text2}
-    //         onChangeText={(TimeFrom) => this.setState({TimeFrom})}>{this.state.TimeFrom}  
-    //         </TextInput>
-    //     </View>
-    //     <View style = {styles.textContainer}>
-    //       <Text>-</Text>
-    //     </View>
-    //     <View style = {styles.textContainer}>
-    //       <Text style={styles.text1}> Time to </Text>
-    //       <TextInput 
-    //       style={styles.text2}
-    //       onChangeText={(TimeTo) => this.setState({TimeTo})}>{this.state.TimeTo} 
-    //       </TextInput>
-    //     </View>
-    //   </View>
-    //   <Text style={styles.textContainer}> Notes : {'\n'} </Text>
-    //   <View style = {styles.textContainer1}>
-    //     <TextInput 
-    //       style = { styles.noteStyle }
-    //       multiline={true}
-    //       onChangeText={note => this.setState({ note})}
-    //       scrollEnabled={this.state.scrollEnabled}
-    //       />
-    //   </View>
-    //   {/* <Text> {this.state.note} </Text> */}
-    //   <View style = {styles.textContainer2}>
-    //   {this.renderButton()}
-    //   </View>
-     
-    // </KeyboardAvoidingView>
-    <View >
+    <View style = {styles.fullView}>
+      <KeyboardAvoidingView style = {styles.boardView} behavior="height">
+        <View style = {styles.descriptionView}>
+          <Text style = {styles.subTopic}>Code :</Text>
+          <Text style = {styles.textStyle}>{this.params.SelectCode}</Text>
+        </View>
 
+        <View style = {styles.descriptionView}>
+          <Text style = {styles.subTopic}>Description :</Text>
+          <Text style = {styles.textStyle}>{this.params.SelectedDescription}</Text>
+        </View>
+
+        <View style = {styles.time}>
+          <View style = {styles.timeDescription}>
+            <Text style = {styles.subTopic}>Time from :</Text>
+            <TextInput borderBottomWidth = {1} onChangeText={(TimeFrom) => this.setState({TimeFrom})}>{this.state.TimeFrom}</TextInput>
+          </View>
+
+          <View style = {styles.timeDescription}>
+            <Text style = {styles.subTopic}>Time to :</Text>
+            <TextInput style = {styles.textStyle} borderBottomWidth = {1} onChangeText={(TimeTo) => this.setState({TimeTo})}>{this.state.TimeTo}</TextInput>
+          </View>
+        </View>
+
+        <View style = {styles.descriptionView}>
+          <Text style = {styles.subTopic}>Note :</Text>
+          <TextInput 
+            borderBottomWidth = {1}
+            multiline={true}
+            scrollEnabled={this.state.scrollEnabled}
+            textAlignVertical= 'top'
+            height= {100}></TextInput>
+        </View>
+
+        <View style= {styles.buttonContainer}>
+          {this.renderButton()}
+        </View>
+      </KeyboardAvoidingView>
     </View>
     );
   }
@@ -135,68 +129,45 @@ render() {
 export default Done;
 
 const styles = StyleSheet.create({
-  // container: {
-  //   flex: 1,
-  //   alignItems: 'center',
-  //   backgroundColor: '#dcdcdc',
-  // },
-  // text1: {
-  //   fontSize: 16,
-  //   color: '#000000',
-  //   borderRadius: 3,
-  //   height: 40,
-  //   // backgroundColor: '#e6e6fa',
-  //   fontWeight: 'bold' 
-  // },
-  // text2: {
-  //   fontSize: 16,
-  //   color: '#000000',
-  //   borderRadius: 3,
-  //   height: 40,
-  //   backgroundColor: '#e6e6fa',
-  //   fontWeight: 'bold' 
-  // },
-  // textContainer: {
-  //   alignSelf: 'flex-start',
-  //   paddingLeft: 10,
-  //   justifyContent: 'center',
-  //   alignItems: 'center',
-  //   paddingTop: 10,
-  //   fontSize: 16,
-  //   fontWeight: 'bold',
-  //   color: '#000000'
-  // },
-  // textContainer2: {
-  //   alignSelf: 'center',
-  //   paddingLeft: 10,
-  //   justifyContent: 'center',
-  //   alignItems: 'center',
-  //   paddingTop: 10,
-  //   fontSize: 16,
-  //   fontWeight: 'bold',
-  //   color: '#000000'
-  // },
-  // textTime: {
-  //   flexDirection: 'row',
-  //   alignSelf: 'flex-start'
-  // },
-  // noteStyle: {
-  //   backgroundColor: '#e6e6fa',
-  //   borderRadius: 5,
-  //   textAlignVertical: 'top',
-  //   // alignSelf: 'flex-start',
-  //   height: 100,
-  //   width: SCREEN_WIDTH-20
-
-  // },
-  // textContainer1: {
-  //   alignSelf: 'flex-start',
-  //   paddingLeft: 10,
-  //   paddingTop: 10,
-  //   fontSize: 16,
-  //   color: '#000000'
-  // },
-  // // keyboardStyle: {
-  // //   behavior: 'position'
-  // // }
+  fullView: {
+    flex: 1,
+    height: '100%',
+    alignItems: 'center',
+    backgroundColor: '#dcdcdc',
+    paddingTop: 15,
+    paddingBottom: 15
+  },
+  boardView: {
+    width: SCREEN_WIDTH-30,
+    height: '100%',
+    borderWidth: 1,
+    borderColor: '#ffffff',
+    borderRadius: 10
+  },
+  descriptionView: {
+    paddingTop: 5,
+    paddingLeft: 15,
+    paddingRight: 15
+  },
+  subTopic: {
+    color: '#000000',
+    fontWeight: 'bold'
+  },
+  time: {
+    flexDirection: 'row'
+  },
+  timeDescription: {
+    paddingTop: 5,
+    paddingLeft: 15,
+    paddingRight: 15,
+    width: '50%',
+  },
+  buttonContainer: {
+    alignSelf: 'center',
+    position: 'absolute',
+    bottom: 30
+  },
+  textStyle: {
+    marginBottom: 6
+  }
 });
