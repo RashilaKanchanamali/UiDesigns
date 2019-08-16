@@ -84,116 +84,119 @@ render() {
   var Token = this.params.TokenTimeSheetInternal
   const { navigate } = this.props.navigation;
   return (
-    <KeyboardAvoidingView behavior="padding" style={styles.container} keyboardVerticalOffset = {Header.HEIGHT + 50 }>
+    // <KeyboardAvoidingView behavior="padding" style={styles.container} keyboardVerticalOffset = {Header.HEIGHT + 50 }>
     
-      <View style = {styles.textContainer}>
-        <Text style={styles.text1}> Code : {this.params.SelectCode} </Text>
-      </View>
-      <View style = {styles.textContainer}>
-        <Text style={styles.text1}> Description :   {this.params.SelectedDescription} </Text>
-      </View>
-      <View style = {styles.textTime}>
-        <View style = {styles.textContainer}>
-          <Text style={styles.text1}> Time from </Text>
-          <TextInput 
-            style={styles.text2}
-            onChangeText={(TimeFrom) => this.setState({TimeFrom})}>{this.state.TimeFrom}  
-            </TextInput>
-        </View>
-        <View style = {styles.textContainer}>
-          <Text>-</Text>
-        </View>
-        <View style = {styles.textContainer}>
-          <Text style={styles.text1}> Time to </Text>
-          <TextInput 
-          style={styles.text2}
-          onChangeText={(TimeTo) => this.setState({TimeTo})}>{this.state.TimeTo} 
-          </TextInput>
-        </View>
-      </View>
-      <Text style={styles.textContainer}> Notes : {'\n'} </Text>
-      <View style = {styles.textContainer1}>
-        <TextInput 
-          style = { styles.noteStyle }
-          multiline={true}
-          onChangeText={note => this.setState({ note})}
-          scrollEnabled={this.state.scrollEnabled}
-          />
-      </View>
-      {/* <Text> {this.state.note} </Text> */}
-      <View style = {styles.textContainer2}>
-      {this.renderButton()}
-      </View>
+    //   <View style = {styles.textContainer}>
+    //     <Text style={styles.text1}> Code : {this.params.SelectCode} </Text>
+    //   </View>
+    //   <View style = {styles.textContainer}>
+    //     <Text style={styles.text1}> Description :   {this.params.SelectedDescription} </Text>
+    //   </View>
+    //   <View style = {styles.textTime}>
+    //     <View style = {styles.textContainer}>
+    //       <Text style={styles.text1}> Time from </Text>
+    //       <TextInput 
+    //         style={styles.text2}
+    //         onChangeText={(TimeFrom) => this.setState({TimeFrom})}>{this.state.TimeFrom}  
+    //         </TextInput>
+    //     </View>
+    //     <View style = {styles.textContainer}>
+    //       <Text>-</Text>
+    //     </View>
+    //     <View style = {styles.textContainer}>
+    //       <Text style={styles.text1}> Time to </Text>
+    //       <TextInput 
+    //       style={styles.text2}
+    //       onChangeText={(TimeTo) => this.setState({TimeTo})}>{this.state.TimeTo} 
+    //       </TextInput>
+    //     </View>
+    //   </View>
+    //   <Text style={styles.textContainer}> Notes : {'\n'} </Text>
+    //   <View style = {styles.textContainer1}>
+    //     <TextInput 
+    //       style = { styles.noteStyle }
+    //       multiline={true}
+    //       onChangeText={note => this.setState({ note})}
+    //       scrollEnabled={this.state.scrollEnabled}
+    //       />
+    //   </View>
+    //   {/* <Text> {this.state.note} </Text> */}
+    //   <View style = {styles.textContainer2}>
+    //   {this.renderButton()}
+    //   </View>
      
-    </KeyboardAvoidingView>
+    // </KeyboardAvoidingView>
+    <View >
+
+    </View>
     );
   }
 }
 export default Done;
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: 'center',
-    backgroundColor: '#dcdcdc',
-  },
-  text1: {
-    fontSize: 16,
-    color: '#000000',
-    borderRadius: 3,
-    height: 40,
-    // backgroundColor: '#e6e6fa',
-    fontWeight: 'bold' 
-  },
-  text2: {
-    fontSize: 16,
-    color: '#000000',
-    borderRadius: 3,
-    height: 40,
-    backgroundColor: '#e6e6fa',
-    fontWeight: 'bold' 
-  },
-  textContainer: {
-    alignSelf: 'flex-start',
-    paddingLeft: 10,
-    justifyContent: 'center',
-    alignItems: 'center',
-    paddingTop: 10,
-    fontSize: 16,
-    fontWeight: 'bold',
-    color: '#000000'
-  },
-  textContainer2: {
-    alignSelf: 'center',
-    paddingLeft: 10,
-    justifyContent: 'center',
-    alignItems: 'center',
-    paddingTop: 10,
-    fontSize: 16,
-    fontWeight: 'bold',
-    color: '#000000'
-  },
-  textTime: {
-    flexDirection: 'row',
-    alignSelf: 'flex-start'
-  },
-  noteStyle: {
-    backgroundColor: '#e6e6fa',
-    borderRadius: 5,
-    textAlignVertical: 'top',
-    // alignSelf: 'flex-start',
-    height: 100,
-    width: SCREEN_WIDTH-20
+  // container: {
+  //   flex: 1,
+  //   alignItems: 'center',
+  //   backgroundColor: '#dcdcdc',
+  // },
+  // text1: {
+  //   fontSize: 16,
+  //   color: '#000000',
+  //   borderRadius: 3,
+  //   height: 40,
+  //   // backgroundColor: '#e6e6fa',
+  //   fontWeight: 'bold' 
+  // },
+  // text2: {
+  //   fontSize: 16,
+  //   color: '#000000',
+  //   borderRadius: 3,
+  //   height: 40,
+  //   backgroundColor: '#e6e6fa',
+  //   fontWeight: 'bold' 
+  // },
+  // textContainer: {
+  //   alignSelf: 'flex-start',
+  //   paddingLeft: 10,
+  //   justifyContent: 'center',
+  //   alignItems: 'center',
+  //   paddingTop: 10,
+  //   fontSize: 16,
+  //   fontWeight: 'bold',
+  //   color: '#000000'
+  // },
+  // textContainer2: {
+  //   alignSelf: 'center',
+  //   paddingLeft: 10,
+  //   justifyContent: 'center',
+  //   alignItems: 'center',
+  //   paddingTop: 10,
+  //   fontSize: 16,
+  //   fontWeight: 'bold',
+  //   color: '#000000'
+  // },
+  // textTime: {
+  //   flexDirection: 'row',
+  //   alignSelf: 'flex-start'
+  // },
+  // noteStyle: {
+  //   backgroundColor: '#e6e6fa',
+  //   borderRadius: 5,
+  //   textAlignVertical: 'top',
+  //   // alignSelf: 'flex-start',
+  //   height: 100,
+  //   width: SCREEN_WIDTH-20
 
-  },
-  textContainer1: {
-    alignSelf: 'flex-start',
-    paddingLeft: 10,
-    paddingTop: 10,
-    fontSize: 16,
-    color: '#000000'
-  },
-  // keyboardStyle: {
-  //   behavior: 'position'
-  // }
+  // },
+  // textContainer1: {
+  //   alignSelf: 'flex-start',
+  //   paddingLeft: 10,
+  //   paddingTop: 10,
+  //   fontSize: 16,
+  //   color: '#000000'
+  // },
+  // // keyboardStyle: {
+  // //   behavior: 'position'
+  // // }
 });
