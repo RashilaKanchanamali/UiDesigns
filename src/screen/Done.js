@@ -115,7 +115,8 @@ render() {
             multiline={true}
             scrollEnabled={this.state.scrollEnabled}
             textAlignVertical= 'top'
-            height= {100}></TextInput>
+            height= {100}
+            onChangeText={(note) => this.setState({note})} ></TextInput>
         </View>
 
         <View style= {styles.buttonContainer}>

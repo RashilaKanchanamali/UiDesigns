@@ -90,7 +90,7 @@ renderButton () {
       <KeyboardAvoidingView style = {styles.boardView} behavior="height">
         <View style = {styles.descriptionView}>
           <Text style = {styles.subTopic}>Description :</Text>
-          <TextInput borderBottomWidth = {1} style = {styles.textStyle}>{this.params.SelectedDescription}</TextInput>
+          <TextInput borderBottomWidth = {1} style = {styles.textStyle} onChangeText={(Description) => this.setState({Description})} >{this.params.SelectedDescription}</TextInput>
         </View>
 
         <View style = {styles.time}>
